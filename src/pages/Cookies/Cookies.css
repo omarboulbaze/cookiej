@@ -1,0 +1,53 @@
+body{
+    background-color: rgb(228, 228, 228);
+    user-select: none;
+}
+
+.navbar_container{
+    background-image: linear-gradient(white,rgb(236, 236, 236));
+    width: 100%;
+    position: fixed;
+    bottom: 0px; 
+    display: flex;
+    justify-content: space-evenly;
+    padding-block: 0.4rem;
+    padding-bottom: 2rem;
+}
+
+.navbar_btn{
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: rgb(185, 185, 185);
+    border-radius: 50%;
+    display: grid;
+    justify-content: center;
+    width: 20vw;
+}
+
+
+
+.navbar_btn .icon{
+    margin: auto;
+}
+
+.navbar_text{
+    font-family: 'Lato', sans-serif;
+    font-weight: bold;
+    color: rgb(82, 82, 82);
+    font-size: 0.8rem;
+    
+}
+
+
+
+
+.navbar_btn:active{
+    opacity: 0.8;
+    
+}
+
+
+
+
+
