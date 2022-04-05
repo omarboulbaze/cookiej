@@ -1,0 +1,9 @@
+.topbar{
+    text-align: center;
+    background-image: linear-gradient(#ececec, white);
+    padding: 1rem;
+    font-family: 'Lato', sans-serif;
+    font-weight: bold;
+    color: #3a3a3a;
+    font-size: 1.5rem;
+}
