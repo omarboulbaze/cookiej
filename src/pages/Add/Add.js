@@ -1,11 +1,16 @@
 import Topbar from "../Components/Topbar/Topbar";
-
+import "./Add.css";
 function Add(){
 
     return(
         <>
-        <Topbar/>
-        <h1>Add</h1>
+            <Topbar/>
+            <div className="add_form">
+                <input placeholder="Title" className="text_form"/> 
+                <textarea placeholder="Description" className="text_form description"/> 
+
+            </div>
+        
         </>
     )
 }
