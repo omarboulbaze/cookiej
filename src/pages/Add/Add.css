@@ -9,7 +9,6 @@
     margin: 0;
     border-radius: 0px;
     border: 1px solid rgba(0, 0, 0, 0.062);
-    font-family: 'Lato', sans-serif;
 
 }
 
@@ -17,3 +16,39 @@
     border-top: 0px;
     padding-bottom: 5rem;
 }
+
+.input-group
+{
+    position: relative;
+}
+.input
+{
+    padding: 1.5rem;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #0000002f;
+    font-size: 1rem;
+    font-family: 'Lato', sans-serif;
+
+}
+.placeholder
+{
+    position: absolute;
+    top: 25px;
+    left: 8px;
+    font-size: 1rem;
+    padding-left: 10px;
+    color: rgb(121, 121, 121);
+    transition: 0.3s;
+    pointer-events: none;
+    font-family: 'Lato', sans-serif;
+}
+.input:focus + .placeholder, .input:not(:placeholder-shown) + .placeholder
+{
+    top: 5px;
+    color: rgb(129, 129, 129);
+    background-color: #fff;
+    font-size: 0.8rem;
+}
+

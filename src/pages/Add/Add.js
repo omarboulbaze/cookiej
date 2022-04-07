@@ -6,9 +6,15 @@ function Add(){
         <>
             <Topbar/>
             <div className="add_form">
-                <input placeholder="Title" className="text_form"/> 
-                <textarea placeholder="Description" className="text_form description"/> 
-
+                <div className="input-group">
+                    <input type="text" className="input" placeholder=" "/>
+                    <label className="placeholder">Title</label>
+                </div>
+                <div className="input-group">
+                    <textarea type="text" className="input" placeholder=" " /> 
+                    <label className="placeholder">Description</label>
+                </div>
+               
             </div>
         
         </>

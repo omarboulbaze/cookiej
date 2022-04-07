@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCookie, faPlus, faTrophy } from '@fortawesome/free-solid-svg-icons';
 function Navbar(){
 
- console.log(window.location)
     
    function checkSelectedPage(pathname){
        if(window.location.pathname === pathname){
