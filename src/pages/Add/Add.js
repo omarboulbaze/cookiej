@@ -1,4 +1,4 @@
-import { useRef } from "react";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import Topbar from "../Components/Topbar/Topbar";
@@ -9,11 +9,8 @@ function Add(){
     const date = new Date();
     const defaultValue = date.toLocaleDateString('en-CA');
 
-    const inputRef = useRef(null);
-    const handleClick = () => {
-        inputRef.current.click();
-      };
-
+ 
+  
 
     return(
         <>
@@ -28,10 +25,15 @@ function Add(){
                     <label className="placeholder">Description</label>
                 </div>
                 <div className="input-container">
-                    <FontAwesomeIcon icon={faCalendar} className="icon"/>
-                    <label className="label">Today</label>
-                    <input ref={inputRef} type="date" defaultValue={defaultValue}/>
-                    <FontAwesomeIcon icon={faPencil} className="icon edit" onClick={handleClick}/>
+                    <div>
+                        <FontAwesomeIcon icon={faCalendar} className="input-icon"/>
+                        <label className="label">Today</label>
+                    </div>
+                    <div className="edit">
+                        <input  id="datepicker" type="date" defaultValue={defaultValue} />
+                        <label htmlFor="datepicker"><FontAwesomeIcon icon={faPencil} className="input-icon"/></label>
+                    </div>
+                    
                 </div>
                
             </div>
