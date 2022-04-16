@@ -31,6 +31,9 @@
     border: 1px solid #0000002f;
     font-size: 1rem;
     font-family: 'Lato', sans-serif;
+    margin: 0px;
+    border-radius: 0;
+    resize: none;
 
 }
 .placeholder
@@ -41,46 +44,56 @@
     font-size: 1rem;
     padding-left: 10px;
     color: #818181;
-    transition: 0.3s;
+    transition: 0.1s ease-out;
     pointer-events: none;
     font-family: 'Lato', sans-serif;
+    margin: 0px;
 }
 .input:focus + .placeholder, .input:not(:placeholder-shown) + .placeholder
 {
-    top: 10px;
+    top: 1px;
+    padding-top: 5px;
+    padding-bottom: 2px;
     color: #818181;
     background-color: #fff;
     font-size: 0.8rem;
+    width: 100%;
+    margin: 0px;
 }
 
 .input-container{
     background-color: rgb(255, 255, 255);
-    border: 1px solid #0000002f;
+    border: 0.1px solid #0000002f;
     padding: 1rem;
     display: flex;
     justify-content:space-between;
 }
 
-.input-icon{
+.input-container .icon{
     font-size: 1.5rem;
+    width: 2rem;
     padding-inline: 0.5rem;
     color: #3a3a3a;
 }
-
-.input-container .edit{
-    float: right;
-}
-
 
 .input-container .label{
     font-family: 'Lato' , sans-serif;
     padding-inline: 0.5rem;
 }
 
-#datepicker{
-    color: #3a3a3a;
+.datepicker{
+    width: 4rem;
+    text-align: center;
 }
 
-#datepicker:focus{
-    outline: none;
+.rank-container{
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #0000002f;
+    padding: 1rem;
 }
+
+.input-container select, .input-container select:focus, .input-container input{
+    color: #3a3a3a;
+    outline: #3a3a3a;
+}
+
