@@ -1,9 +1,10 @@
+import Topbar from "../Components/Topbar/Topbar";
 
 function Challenges(){
 
     return(
         <>
-       <h1>Challenges</h1>
+            <Topbar text="Challenges"/>
         </>
     )
 }

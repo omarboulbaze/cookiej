@@ -1,10 +1,10 @@
 import './Topbar.css'
-function Topbar(){
+function Topbar(props){
 
     return(
         <>
             <div className="topbar">
-                <span>New Cookie</span>
+                <span>{props.text}</span>
             </div>
         </>
     )

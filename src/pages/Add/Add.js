@@ -50,7 +50,7 @@ function Add(){
 
     return(
         <>
-            <Topbar/>
+            <Topbar text="New Cookie"/>
             <div className="add_form">
 
                 <div className="input-group">
