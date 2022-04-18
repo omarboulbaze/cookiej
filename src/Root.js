@@ -6,6 +6,7 @@ import Navbar from "./pages/Components/Navbar/Navbar";
 import Cookies from "./pages/Cookies/Cookies";
 import Add from "./pages/Add/Add";
 import Challenges from "./pages/Challenges/Challenges";
+import "./Root.css";
 
 function Root() {
 

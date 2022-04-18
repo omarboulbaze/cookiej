@@ -1,6 +1,5 @@
 body{
     background-color: rgb(228, 228, 228);
-    user-select: none;
 }
 
 .navbar_container{
@@ -32,7 +31,6 @@ body{
 }
 
 .navbar_text{
-    font-family: 'Lato', sans-serif;
     font-weight: bold;
     color: #9b9b9b;
     font-size: 0.8rem;

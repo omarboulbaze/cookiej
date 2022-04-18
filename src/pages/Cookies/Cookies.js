@@ -9,7 +9,7 @@ function Cookies(){
     return(
         <>
         <Topbar text="My Cookies"/>
-        <div className="empty-container">
+        <div className="empty-container" style={{maxWidth:"640px", margin:"auto"}}>
             <img src={cookieLogo} alt="Cookie Logo"/>
             <h1>No cookies yet</h1>
             <span><a href="./add">Add</a> your first cookie to your personal Cookie Jar!</span>

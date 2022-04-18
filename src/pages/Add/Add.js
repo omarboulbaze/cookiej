@@ -66,7 +66,7 @@ function Add(){
     return(
         <>
             <Topbar text="New Cookie"/>
-            <div className="add_form">
+            <div className="add_form" style={{maxWidth:"640px", margin:"auto"}}>
 
                 <div className="input-group">
                     <input type="text" className="input" placeholder=" " style={{"borderBottom":"0px"}}/>
@@ -83,7 +83,7 @@ function Add(){
                         <FontAwesomeIcon icon={faCalendar} className="icon"/>
                         <label className="label">{date===today ? "Today" : timeAgo(date)}</label>
                     </div>
-                    <input type="date" defaultValue={date} value={date} max={today} onChange={(e)=> dateChecker(e)} required/>
+                    <input type="date" value={date} max={today} onChange={(e)=> dateChecker(e)} required style={{fontSize:"1rem"}}/>
                 </div>
 
                 <div className="input-container">
@@ -91,7 +91,7 @@ function Add(){
                         <FontAwesomeIcon icon={faRankingStar} className="icon"/>
                         <label className="label">Rank</label>
                     </div>
-                    <select className="select">
+                    <select className="select" style={{fontSize:"1rem"}}>
                         <option className="bronze">🟤 Bronze</option>
                         <option className="silver">⚪️ Silver</option>
                         <option className="gold">🟡 Gold</option>
@@ -128,6 +128,9 @@ function Add(){
                     </div>
                     <label htmlFor="file">{image ? <FontAwesomeIcon icon={faCheckCircle} className="icon" style={{color:"#ffae44"}}/> : <FontAwesomeIcon icon={faCamera} className="icon"/> }</label>
                     <input id="file" capture="environment" accept="image/*" type="file" style={{display:"none"}} onChange={()=> setImage(true)}/>
+                </div>
+                <div className="button-container">
+                    <button>Add Cookie</button>
                 </div>
                
             </div>
