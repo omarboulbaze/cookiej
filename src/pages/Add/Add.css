@@ -113,15 +113,28 @@
     display: flex;
     flex-wrap: wrap;
 }
-.tag{
+
+.tag-input{
     background-color: #f0f0f0;
     border-radius: 10%;
     padding: 0.5rem;
     margin: 0.2rem;
+    border: none;
+    font-size: 1rem;
 }
-.tag:active{
+.tag-input.active{
     background-color: #ffb656;
 }
+.tag-input:focus{
+    border: none;
+    outline: none;
+}
+.tag-input:focus, .tag-input:active{
+    background-color: #ffb656;
+    caret-color: #855b26;
+}
+
+
 input, textarea{
     caret-color:#ffb656;
 }
