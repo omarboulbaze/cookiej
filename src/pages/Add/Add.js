@@ -45,6 +45,18 @@ const timeAgo = (date) => {
 
 // #endregion
 
+ // Tag component that can be used by the users they want to create a custom tag
+ function Tag(props){
+    const [name, setName] = useState(props.name);
+    //Fixing the hidden caret when text is empty
+    useEffect(()=>{
+        if(name==="") setName(" ") 
+    },[name])
+
+    return <input value={name} onChange={e=>setName(e.target.value)} className={props.tag === name ? "tag-input active" : "tag-input" } onClick={()=>props.setTag(name)} style={{width: `${name.length}ch`,minWidth:"2rem"}}/>
+}
+
+
 function Add(){
 
     const today = new Date().toLocaleDateString('en-CA');
@@ -96,35 +108,27 @@ function Add(){
             reader.readAsDataURL(e.target.files[0]);
           }
     }
-
-    //Input that pops up when user clicks on "+" to add a custom tag
-    // const [tagInput, setTagInput]=useState("");
    
     const [tagList, setTagList] = useState(['Fitness', 'Education'])
+    const [tagPlusVisible, setTagPlusVisible] = useState(true)
 
     useEffect(()=>{
-        
+        console.log(tagList)
     },tagList)
+
     //Adding new custom tags
     function addTag(){
         const pre = tagList;
-        pre.push("d");
-        setTagList(pre);
-    }
-    
-    // Tag component that can be used by the users they want to create a custom tag
-    function Tag(props){
-        const [name, setName] = useState(props.name);
-        //Fixing the hidden caret when text is empty
-        useEffect(()=>{
-            if(name===""){
-                setName(" ")
-            }
-        },[name])
-        return <input value={name} onChange={e=>setName(e.target.value)} className={tag === name ? "tag-input active" : "tag-input" } onClick={()=>setTag(name)} style={{width: `${name.length}ch`,minWidth:"2rem"}}/>
+        pre.push("");
+        setTagList((pre));
+        setTagPlusVisible(false);
     }
 
+    //Printing array
     console.log(tagList)
+    
+
+    
     return(
         <>
             <Topbar text="New Cookie"/>
@@ -184,12 +188,15 @@ function Add(){
                     <hr style={{opacity:"0.2", margin:"1rem", marginBottom:"1.5rem"}}/>
                     <div className="lineTwo">
                         {
-                        tagList.map( tag => {
-                            return <Tag name={tag} key={tag.toString()}/>
-                            // TODO: MAKE THE LIST UPDATE VISUALLY AUTOMATICALLY 
+                        tagList.map( (t,index) => {
+                            return <Tag name={t} key={index} tag={tag} setTag={setTag}/>
+                            //TODO: React doesn't automatically update 
                         })
                         }
-                        <span className="tag-input" onClick={()=> addTag()}><FontAwesomeIcon icon={faPlus} className="icon" style={{fontSize:"1rem"}}/></span>
+                        {
+                            tagPlusVisible ? <span className="tag-input" onClick={()=> addTag()}><FontAwesomeIcon icon={faPlus} className="icon" style={{fontSize:"1rem"}}/></span> : null
+                        }
+                        
                     </div>
                     </> 
                     : null
