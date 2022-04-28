@@ -26,44 +26,23 @@ mongoose
 // Importing the exported models
 const Cookie = require('./models/cookie');
 
-// // Adding a review to the database.
-// app.post('/api/addReview',(req, res)=>
-//     {
-//     console.log(req.body);
+// Adding a cookie to the database.
+app.post('/api/addCookie',(req, res)=>
+    {
+    console.log(req.body);
 
-//     const review = new Review(req.body);
+    const cookie = new Cookie(req.body);
     
-//     review.save( (err,data)=> 
-//         {
-//         if(err) return res.status(500).json(err);
-                    
-//         res.status(201).json(data);
-//             }
-//         );
-//     }
-// );
+    cookie.save( (err,data)=> 
+        {
+        if(err) return res.status(500).json(err);           
+        res.status(201).json(data);
+            }
+        );
+    }
+);
 
-// // Checking if the user's code is already used or not before letting access the form.
-// app.post('/api/codeValid',(req, res)=>
-//     {
-//     const codes  = req.body;
-    
-//     if(!codes.groupA || !codes.groupB || !codes.groupC ){
-//       res.status(401).send("The QR code you scanned is invalid. Please scan a valid code.")
-//     }else{
-//       Review.findOne({groupA : codes.groupA, groupB : codes.groupB, groupC : codes.groupC}).then( (data) => 
-//       {
-//       if(data){
-//         res.status(401).send("The QR code you scanned is invalid. Please scan a valid code.")
-//       }else{
-//         res.status(200).send("OK")
-//       }
-//           }
-//       );
-//   }
-//     }
-    
-// );
+
 
 // Returning all reviews that exists in the database.
 app.get('/api/', (req,res)=>

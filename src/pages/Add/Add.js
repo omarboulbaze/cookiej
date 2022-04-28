@@ -49,18 +49,14 @@ const timeAgo = (date) => {
 function Add(){
 
     const today = new Date().toLocaleDateString('en-CA');
-
-    //is the image uploaded ?
-    const [imageUploaded, setImageUploaded] = useState(false)
     
     // useState from Title, Description, Date, Rank, Tags, Image.
+    const [image, setImage] = useState(null);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [date, setDate] = useState(today);
     const [rank, setRank] = useState("bronze");
-    const [tag, setTag] = useState("");
-    const [image, setImage] = useState(null);
-    
+    const [tag, setTag] = useState(null);
 
     function dateChecker(e){
         if(e.target.value>today){
@@ -75,14 +71,15 @@ function Add(){
         
     }
 
-    //Creating the reference of the <input/> in html.
+    // Creating the reference of the <input/> in html.
     const imageInputFile = useRef(null);
     function divClick(){
         imageInputFile.current.click();
     }
-    //When user uploads an image
+    // is the image uploaded ?
+    const [imageUploaded, setImageUploaded] = useState(false)
+    // When user uploads an image
     const [imgData, setImgData] = useState(null);
-
     function onImageUpload(e){
         setImageUploaded(true);
         if (e.target.files[0]) {
@@ -112,15 +109,40 @@ function Add(){
     
     //#endregion Tag
     
-    // Reacting to tagPlusVisible state change. Since tagInputRef is null when executing addTag() function. 
+    // Using useEffect to react to tagPlusVisible state change (When the use clicks on the plus sign in the tag area),
+    // since tagInputRef is null (not rendered) when executing addTag() function.
     useEffect(() => {
         if(!tagPlusVisible) tagInputRef.current.focus();  
       }, [tagPlusVisible]);
 
+    // #region Adding the cookie to the database
+    
+    //Using dotenv variable dynamically depending on the status of the app (developement or production)
+    const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
+
+    // Importing axios
+    const axios = require("axios");
+
+    function addCookie(e){
+        e.preventDefault();
+        console.table({image:image,title:title,description:description,date:date,rank:rank,tag:tag})
+        
+        axios.post(apiUrl + `/addCookie`, {
+            image: image,
+            title: title,
+            description: description,
+            date: date,
+            rank: rank,
+            tag: tag
+        })
+          .catch( error => {
+            console.log(error);
+          });
+    }
     return(
         <>
             <Topbar text="New Cookie"/>
-            <form className="add_form" style={{maxWidth:"640px", margin:"auto"}}>
+            <form className="add_form" style={{maxWidth:"640px", margin:"auto"}} onSubmit={e=>addCookie(e)}>
                 {/* Image input */}
                 <div className="img-container" onClick={()=> divClick()}>
                         <img src={imageUploaded ? imgData : cookieBg} alt="Cookie Background"/>
