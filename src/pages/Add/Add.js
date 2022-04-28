@@ -107,11 +107,12 @@ function Add(){
     }
     function tagInputonChange(e){
         setTagInput(e.target.value);
-        setTag(tagInput)
+        setTag(e.target.value)
     }
+    
     //#endregion Tag
     
-    // Reacting to tagPlusVisible state change. Since tagInputRef is null when executing addTag() function.
+    // Reacting to tagPlusVisible state change. Since tagInputRef is null when executing addTag() function. 
     useEffect(() => {
         if(!tagPlusVisible) tagInputRef.current.focus();  
       }, [tagPlusVisible]);
@@ -174,7 +175,6 @@ function Add(){
                     <>
                     <hr style={{opacity:"0.2", margin:"1rem", marginBottom:"1.5rem"}}/>
                     <div className="lineTwo">
-                        
                         {
                             tagPlusVisible 
                             ? 
