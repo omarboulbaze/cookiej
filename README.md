@@ -1,8 +1,5 @@
 # The Cookie Jar App
 
-
-This project was inspired by David Goggins using his [Cookie Jar Method](https://thewilliamkon.medium.com/david-goggins-the-cookie-jar-method-explained-fa2f6d586d50). 
-
 ![CookieJ Logo](/public/images/ios/apple-touch-icon.png)
 
 
