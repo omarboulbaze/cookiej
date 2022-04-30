@@ -79,6 +79,11 @@
     padding-inline: 0.5rem;
 }
 
+.img-container .label, .img-container .icon{
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.63));
+    color: white;
+}
+
 .datepicker{
     width: 4rem;
     text-align: center;
@@ -175,17 +180,48 @@ input, textarea{
 }
 
 .img-container img{
-    opacity: 0.2;
+    opacity: 0.9;
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     min-height: 100%;
-    filter: blur(3px);
+    filter: blur(5px);
     z-index: -1;
 }
 
 .img-container:active{
+    opacity: 0.5;
+}
+.img-overlay{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.img-overlay img{
+    object-fit: scale-down;
+    width: 70vw;
+    max-width: 640px;
+    margin-inline: auto;
+}
+.img-overlay .icon{
+    color: rgb(255, 255, 255);
+    font-size: 2rem;
+    padding: 1rem;
+    filter: drop-shadow(0px 0px 2px rgb(0, 0, 0));
+    cursor: pointer;
+}
+.img-overlay .icon:active{
     opacity: 0.5;
 }
 

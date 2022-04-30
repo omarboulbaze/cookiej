@@ -6,7 +6,7 @@ import Topbar from "../Components/Topbar/Topbar";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
-import { faAngleDown, faAngleUp, faCamera, faCheckCircle, faPlus, faRankingStar, faTag } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleUp, faCamera, faCheckCircle, faPlus, faRankingStar, faTag, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 //CSS
 import "./Add.css";
@@ -74,7 +74,12 @@ function Add(){
     // Creating the reference of the <input/> in html.
     const imageInputFile = useRef(null);
     function divClick(){
-        imageInputFile.current.click();
+        if(imageUploaded){
+            setOverlayVisibility(true)
+        }else{
+            imageInputFile.current.click();
+        }
+        
     }
     // is the image uploaded ?
     const [imageUploaded, setImageUploaded] = useState(false)
@@ -126,7 +131,6 @@ function Add(){
     function addCookie(e){
         e.preventDefault();
         console.table({image:image,title:title,description:description,date:date,rank:rank,tag:tag})
-        
         axios.post(apiUrl + `/addCookie`, {
             image: image,
             title: title,
@@ -135,20 +139,42 @@ function Add(){
             rank: rank,
             tag: tag
         })
+        .then(()=>{
+            setImage(null)
+            setTitle("");
+            setDescription("");
+            setDate(today);
+            setRank("bronze");
+            setTag(null);
+            setTagInput("");
+            setTagPlusVisible(true);
+        }
+        )
           .catch( error => {
             console.log(error);
           });
     }
+
+    // Image overlay
+    const [overlayVisibility, setOverlayVisibility] = useState(false);
+
+    function deleteImage(){
+        if(window.confirm("Delete the image ?")){
+            setImageUploaded(null);
+            setImage(null);
+        }
+    }
+    
     return(
         <>
             <Topbar text="New Cookie"/>
             <form className="add_form" style={{maxWidth:"640px", margin:"auto"}} onSubmit={e=>addCookie(e)}>
                 {/* Image input */}
                 <div className="img-container" onClick={()=> divClick()}>
-                        <img src={imageUploaded ? imgData : cookieBg} alt="Cookie Background"/>
-                        <label>{imageUploaded ? <FontAwesomeIcon icon={faCheckCircle} className="icon" style={{color:"#ffae44"}}/> : <FontAwesomeIcon icon={faCamera} className="icon"/> }</label>
+                        <img src={imageUploaded ? imgData : cookieBg} alt=""/>
+                        <label>{imageUploaded ? <FontAwesomeIcon icon={faCheckCircle} className="icon" style={{color:"white"}}/> : <FontAwesomeIcon icon={faCamera} className="icon"/> }</label>
                         {/* Input is hidden. Only the label is visible which is linked to the input tag. */}
-                        <input ref={imageInputFile} capture="environment" accept="image/*" type="file" style={{display:"none"}} onChange={ e => onImageUpload(e)}/>
+                        <input ref={imageInputFile} capture accept="image/*" type="file" style={{display:"none"}} onChange={ e => onImageUpload(e)}/>
                         <label className="label" style={{padding:"0.5rem"}}>{imageUploaded ? "Image successfully added!" : "Add Image"}</label>
                 </div>
                 {/* Title input */}
@@ -216,7 +242,17 @@ function Add(){
                 </div>
                
             </form>
-        
+            {
+                overlayVisibility
+                ?
+                <div className="img-overlay" onClick={ ()=> setOverlayVisibility(false)}>
+                <img src={imageUploaded ? imgData : cookieBg} alt=""/>
+                <FontAwesomeIcon icon={faTrash} className="icon" onClick={()=> deleteImage()}/>
+                </div>
+                :
+                null
+            }
+            
         </>
     )
 }
