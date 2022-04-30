@@ -2,6 +2,7 @@
 //React components
 import { useState, useRef, useEffect } from "react";
 import Topbar from "../Components/Topbar/Topbar";
+import Alert from "../Components/Alert/alert";
 
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -140,7 +141,8 @@ function Add(){
             tag: tag
         })
         .then(()=>{
-            setImage(null)
+            setAlert(<Alert/>);
+            setImage(null);
             setTitle("");
             setDescription("");
             setDate(today);
@@ -153,6 +155,8 @@ function Add(){
           .catch( error => {
             console.log(error);
           });
+// Setting Alert to null so the event can be triggered again, otherwise the "alert state" stays the same and the pop up happens only once.
+        setAlert(null);
     }
 
     // Image overlay
@@ -164,9 +168,13 @@ function Add(){
             setImage(null);
         }
     }
+
+    // Alert management
+    const [alert, setAlert] = useState(null);
     
     return(
-        <>
+        <>  
+            {alert}
             <Topbar text="New Cookie"/>
             <form className="add_form" style={{maxWidth:"640px", margin:"auto"}} onSubmit={e=>addCookie(e)}>
                 {/* Image input */}

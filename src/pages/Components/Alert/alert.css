@@ -1,0 +1,67 @@
+  /* Animation */
+@keyframes show {
+    0%{
+        top: -100px;
+        opacity: 0;
+    }
+    100%{
+        top: 2px;
+        opacity: 100%;
+    }
+}
+@keyframes hide {
+    100%{
+        top: -100px;
+        opacity: 0;
+    }
+}
+
+.alert-container.show{
+    animation: show .5s ease-in-out;
+}
+.alert-container.hide{
+        animation: hide .3s ease-in-out forwards;
+}
+ 
+.alert-container{
+    position: absolute;
+    top: 2px;
+    background-color: rgb(133, 255, 133);
+    width: 100%;
+    z-index: 1;
+    /* Padding will now count when setting up the width property  */
+    box-sizing: border-box; 
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.171);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+
+.alert-container .side{
+    width: 0.6rem;
+    background-color: #209220 ;
+}
+.alert-container .icon{
+    font-size: 2.5rem;
+    color: rgb(0, 117, 0);
+    padding: 0.5rem;
+    margin-block: auto;
+}
+.alert-container .text{
+    padding: 0.5rem;
+    height: fit-content;
+    margin: auto;
+    font-size: 1.1rem;
+    text-align: center;
+}
+.alert-container .close{
+    font-size: 2rem;
+    color: rgb(0, 117, 0);
+    background-color: #20922038 ;
+    padding: 1rem;
+}
+.alert-container .close:active{
+    opacity: 0.5;
+}
