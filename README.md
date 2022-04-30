@@ -1,11 +1,6 @@
 # The Cookie Jar App
 
-
-This project was inspired by David Goggins using his [Cookie Jar Method](https://thewilliamkon.medium.com/david-goggins-the-cookie-jar-method-explained-fa2f6d586d50). 
-
 ![CookieJ Logo](/public/images/ios/apple-touch-icon.png)
-
-
 
 ## The Cookie Jar method explained
 
@@ -18,6 +13,8 @@ The Cookie Jar Method works like this :
 - Whenever you are facing an obstacle or hardship, refer back to your cookie jar to remind yourself of everything that you have been through and how resilient you are.
 
 - This cookie jar serves as a mental reserve to dig into and serve as a reference point for your ability to make it through whatever you’re encountering.
+## Screenshots
+![Screenshot](https://imgur.com/vl5FUO7.png)
 
 ## Links
 - [Reddit](https://www.reddit.com/r/davidgoggins/comments/le2cns/david_goggins_cookie_jar_method_showed_me_how_to/)
