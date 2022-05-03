@@ -131,7 +131,7 @@ function Add(){
 
     function addCookie(e){
         e.preventDefault();
-        console.table({image:image,title:title,description:description,date:date,rank:rank,tag:tag})
+        // console.table({image:image,title:title,description:description,date:date,rank:rank,tag:tag})
         axios.post(apiUrl + `/addCookie`, {
             image: image,
             title: title,
@@ -141,7 +141,7 @@ function Add(){
             tag: tag
         })
         .then(()=>{
-            setAlert(<Alert/>);
+            setAlert(<Alert boldText="Congratulations!" text=" Your cookie has been added to your cookie jar." theme="sucess"/>);
             setImage(null);
             setTitle("");
             setDescription("");
@@ -153,6 +153,7 @@ function Add(){
         }
         )
           .catch( error => {
+            setAlert(<Alert boldText="Oops," text=" something went wrong. Please try again later." theme="danger"/>);
             console.log(error);
           });
 // Setting Alert to null so the event can be triggered again, otherwise the "alert state" stays the same and the pop up happens only once.

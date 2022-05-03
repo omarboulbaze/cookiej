@@ -1,4 +1,12 @@
-  /* Animation */
+ /* Variables */
+ :root{
+     --color: 120;
+     --container: hsl(var(--color), 100%, 76%);
+     --side: hsl(var(--color), 64%, 35%);
+     --closeBackground: hsl(var(--color), 77%, 72%);
+ }
+
+/* Animation */
 @keyframes show {
     0%{
         top: -100px;
@@ -26,10 +34,10 @@
 .alert-container{
     position: absolute;
     top: 2px;
-    background-color: rgb(133, 255, 133);
+    background-color: var(--container);
     width: 100%;
     z-index: 1;
-    /* Padding will now count when setting up the width property  */
+    /* Padding will now count when setting up the width property */
     box-sizing: border-box; 
     display: flex;
     justify-content: space-between;
@@ -41,11 +49,11 @@
 
 .alert-container .side{
     width: 0.6rem;
-    background-color: #209220 ;
+    background-color: var(--side) ;
 }
 .alert-container .icon{
     font-size: 2.5rem;
-    color: rgb(0, 117, 0);
+    color: var(--side);
     padding: 0.5rem;
     margin-block: auto;
 }
@@ -58,8 +66,8 @@
 }
 .alert-container .close{
     font-size: 2rem;
-    color: rgb(0, 117, 0);
-    background-color: #20922038 ;
+    color: var(--side);
+    background-color: var(--closeBackground);
     padding: 1rem;
 }
 .alert-container .close:active{
