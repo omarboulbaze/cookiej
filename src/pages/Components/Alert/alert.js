@@ -3,7 +3,7 @@ import { faCheckCircle } from "@fortawesome/free-regular-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import "./alert.css";
+import "./Alert.css";
 
 function Alert(props){
 

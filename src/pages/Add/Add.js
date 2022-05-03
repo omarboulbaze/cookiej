@@ -2,7 +2,7 @@
 //React components
 import { useState, useRef, useEffect } from "react";
 import Topbar from "../Components/Topbar/Topbar";
-import Alert from "../Components/Alert/alert";
+import Alert from "../Components/Alert/Alert";
 
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
