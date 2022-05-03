@@ -1,6 +1,6 @@
 # The Cookie Jar App
 
-![CookieJ Logo](/public/images/ios/apple-touch-icon.png)
+![CookieJ Logo](/public/images/ios/apple-touch-icon.jpg)
 
 ## Screenshots
 ![Screenshot](https://imgur.com/vl5FUO7.png)
