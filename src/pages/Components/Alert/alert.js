@@ -1,5 +1,4 @@
 //Importing css
-import { faCheckCircle } from "@fortawesome/free-regular-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
@@ -15,27 +14,18 @@ function Alert(props){
         setAnimationClass("alert-container hide").then(()=>setVisible(false))
     }
 
-    // Dynamically changing the css variables
+    // Dynamically changing the css variables when hue prop changes
     useEffect(()=>{
         const rs = document.querySelector(':root').style;
-       
-        switch (props.theme) {
-            //TODO: BUG when going from danger to success, the color stays danger instead of changing but the text changes.
-            case "success":
-                rs.setProperty('--color','120');
-                break;
-            case "danger":
-                rs.setProperty('--color','0');
-                break;
-        }
-      }, [])
+        rs.setProperty('--color',props.hue); 
+      }, [props.hue])
 
     return(
         <>
         {visible ?
         <div className={animationClass}>
         <div className="side"></div>
-        <FontAwesomeIcon icon={faCheckCircle} className="icon"/>
+        <FontAwesomeIcon icon={props.icon} className="icon"/>
         <span className="text"><b>{props.boldText}</b>{props.text}</span> 
         <div className="close" onClick={hideAlert}><FontAwesomeIcon icon={faXmark} className="icon"/></div>
         </div>

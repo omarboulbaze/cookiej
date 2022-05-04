@@ -6,7 +6,7 @@ import Alert from "../Components/Alert/Alert";
 
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendar } from "@fortawesome/free-regular-svg-icons";
+import { faCalendar, faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
 import { faAngleDown, faAngleUp, faCamera, faCheckCircle, faPlus, faRankingStar, faTag, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 //CSS
@@ -141,7 +141,7 @@ function Add(){
             tag: tag
         })
         .then(()=>{
-            setAlert(<Alert boldText="Congratulations!" text=" Your cookie has been added to your cookie jar." theme="sucess"/>);
+            setAlert(<Alert boldText="Congratulations!" text=" Your cookie has been added to your cookie jar." hue="120" icon={faCheckCircle}/>);
             setImage(null);
             setTitle("");
             setDescription("");
@@ -153,7 +153,7 @@ function Add(){
         }
         )
           .catch( error => {
-            setAlert(<Alert boldText="Oops," text=" something went wrong. Please try again later." theme="danger"/>);
+            setAlert(<Alert boldText="Oops," text=" something went wrong. Please try again later." hue="0" icon={faXmarkCircle}/>);
             console.log(error);
           });
 // Setting Alert to null so the event can be triggered again, otherwise the "alert state" stays the same and the pop up happens only once.
