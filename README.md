@@ -2,12 +2,13 @@
 
 ![CookieJ Logo](/public/images/ios/apple-touch-icon.jpg)
 
-## Screenshots
-![Screenshot](https://imgur.com/vl5FUO7.png)
-
 ## Project Board
 ### Open the Scrum Board of this project by clicking below
 [![agileicon](https://user-images.githubusercontent.com/25458706/167161157-13718b34-f371-4bdd-89c5-8eb0aeaf1b32.png)](https://github.com/users/omarboulbaze/projects/3)
+
+## Screenshots
+![Screenshot](https://imgur.com/vl5FUO7.png)
+
 
 ## The Cookie Jar method explained
 
