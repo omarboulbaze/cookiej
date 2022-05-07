@@ -23,3 +23,69 @@
     color: black;
 }
 
+.cookie-grouper{
+    margin: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 8rem;
+}
+.cookie-container{
+    display: flex;
+    flex-direction: row;
+    margin: 1rem;
+    border-radius: 10px;
+    overflow: hidden;
+    justify-content: space-between;
+    max-width: 40rem;
+    margin-inline: auto;
+}
+.img-tag-date-container{
+    display: flex;
+    min-width: 8rem;
+    max-width: 8rem;
+    flex-direction: column;
+}
+.img-tag-date-container img{
+    position: relative;
+    width: 100%;
+
+}
+.cookie-info{
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    flex-grow: 1;
+}
+.cookie-info h1{
+    font-size: 1.2rem;
+}
+.cookie-info p{
+    font-size: 1rem;
+}
+.tag-date-container{
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    flex-wrap: wrap;
+    padding: 0.4rem;
+}
+.tag-date-container .tag{
+    border-radius: 5px;
+    padding: 0.3rem;
+    flex-grow: 1;
+    text-align: center;
+    margin-right: 0.1rem;
+}
+.tag-date-container .date{
+    background-color: hsla(0, 0%, 100%, 0.562);
+    border-radius: 5px;
+    padding: 0.3rem;
+    flex-grow: 1;
+    text-align: center;
+    margin-left: 0.1rem;
+    margin-top: 0.1rem;
+}
+.cookie-side-rank{
+    min-width: 20px;
+    box-shadow: inset 1px 0px 10px #00000013;
+}
+

@@ -20,7 +20,7 @@ const CookieSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    tags:{
+    tag:{
         type:String
     }
 });

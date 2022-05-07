@@ -36,14 +36,13 @@ const getDuration = (timeAgoInSeconds) => {
         }
     }
 };
-
-const timeAgo = (date) => {
+// Exporting this function so it can be imported and used in other file like Cookies.js
+export const timeAgo = (date) => {
     const timeAgoInSeconds = Math.floor((new Date() - new Date(date)) / 1000);
     const {interval, epoch} = getDuration(timeAgoInSeconds);
     const suffix = interval === 1 ? '' : 's';
     return `${interval} ${epoch}${suffix} ago`;
 };
-
 // #endregion
 
 
@@ -180,7 +179,7 @@ function Add(){
             <form className="add_form" style={{maxWidth:"640px", margin:"auto"}} onSubmit={e=>addCookie(e)}>
                 {/* Image input */}
                 <div className="img-container" onClick={()=> divClick()}>
-                        <img src={imageUploaded ? imgData : cookieBg} alt=""/>
+                        <img src={imageUploaded ? imgData : cookieBg} alt="Cookie Preview"/>
                         <label>{imageUploaded ? <FontAwesomeIcon icon={faCheckCircle} className="icon" style={{color:"white"}}/> : <FontAwesomeIcon icon={faCamera} className="icon"/> }</label>
                         {/* Input is hidden. Only the label is visible which is linked to the input tag. */}
                         <input ref={imageInputFile} capture accept="image/*" type="file" style={{display:"none"}} onChange={ e => onImageUpload(e)}/>
@@ -211,11 +210,11 @@ function Add(){
                         <label className="label">Rank</label>
                     </div>
                     <select className="select" style={{fontSize:"1rem"}} value={rank} onChange={e => setRank(e.target.value)}>
-                        <option value="bronze" className="bronze">🟤 Bronze</option>
-                        <option value="silver" className="silver">⚪️ Silver</option>
-                        <option value="gold" className="gold">🟡 Gold</option>
-                        <option value="platinum" className="platinum">🔵 Platinum</option>
-                        <option value="diamond" className="diamond">🟣 Diamond</option>
+                        <option value="bronze" className="bronze">🟫 Bronze</option>
+                        <option value="silver" className="silver">⬜️ Silver</option>
+                        <option value="gold" className="gold">🟨 Gold</option>
+                        <option value="platinum" className="platinum">🟪 Platinum</option>
+                        <option value="diamond" className="diamond">🟦 Diamond</option>
                     </select>
                 </div>
                 {/* Tags input */}
