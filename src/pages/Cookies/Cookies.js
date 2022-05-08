@@ -18,7 +18,6 @@ import marathonImage from "../../assets/marathonImage.jpg"
 const axios = require('axios');
 
 
-
 function Cookies(){
 
     // Retrieving the cookies from the database
@@ -68,8 +67,7 @@ function Cookies(){
                     default:
                         break;
                 }
-                console.log(hue);
-            return <CookieItem title={c.title} description={c.description} date={timeAgo(c.date)} rank={c.rank} tag={c.tag} key={i} hue={hue} 
+            return <CookieItem title={c.title} description={c.description} date={timeAgo(c.date).toString().includes("hours") ? "Today" : timeAgo(c.date)} rank={c.rank} tag={c.tag} key={i} hue={hue} 
                                 lightness={lightness} lightnessBg={lightnessBg} saturation={saturation} saturationBg={saturationBg}/>
             })
             :

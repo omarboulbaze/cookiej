@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 
 const CookieSchema = new mongoose.Schema({
     image:{
-        data: Buffer,
-        contentType: String
+       type:String
     },
     title:{
         type:String,
