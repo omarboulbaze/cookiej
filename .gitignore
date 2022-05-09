@@ -7,7 +7,7 @@
 .pnp.js
 
 # Uploads
-/api/uploads
+/api/images
 
 # Environnement variables
 .env

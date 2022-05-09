@@ -6,16 +6,17 @@ import "./Cookies.css"
 
 // Logo
 import cookieLogo from "../../assets/svg/cookie.svg"
+import cookieLogoDetailed from "../../assets/cookieLogo.png"
 
 // Components
 import Topbar from "../Components/Topbar/Topbar";
 import {timeAgo} from '../Add/Add';
 
-// Images
-import marathonImage from "../../assets/marathonImage.jpg"
-
 //  Importing axios
 const axios = require('axios');
+
+// Using dotenv variable dynamically depending on the status of the app (developement or production)
+const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
 
 
 function Cookies(){
@@ -24,12 +25,10 @@ function Cookies(){
     const [cookiesData, setCookiesData] = useState();
 
     useEffect(()=>{
-                    //Using dotenv variable dynamically depending on the status of the app (developement or production)
-                    const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
                     axios.get(apiUrl+'/')
                     .then(res => {
                         if(res.data.length > 0) setCookiesData(res.data);
-                    }).catch(e => console.log(e));
+                    }).catch(e => console.log('GET request', e));
                 },[])
 
     return(
@@ -67,7 +66,9 @@ function Cookies(){
                     default:
                         break;
                 }
-            return <CookieItem title={c.title} description={c.description} date={timeAgo(c.date).toString().includes("hours") ? "Today" : timeAgo(c.date)} rank={c.rank} tag={c.tag} key={i} hue={hue} 
+
+                
+            return <CookieItem image={c.image ? apiUrl+'/images/'+ c.image : cookieLogoDetailed} title={c.title} description={c.description} date={timeAgo(c.date).toString().includes("hours") ? "Today" : timeAgo(c.date)} rank={c.rank} tag={c.tag} key={i} hue={hue} 
                                 lightness={lightness} lightnessBg={lightnessBg} saturation={saturation} saturationBg={saturationBg}/>
             })
             :
@@ -91,7 +92,7 @@ function CookieItem(props){
     return(
         <div className="cookie-container" style={{backgroundColor: backgroundColor}}>
             <div className="img-tag-date-container">
-                <img src={marathonImage} alt="marathon"/>
+                <img src={props.image} alt="Visual memories"/>
                 <div className="tag-date-container" style={!props.tag ? {justifyContent:"center"} : null}>
                     {props.tag ? <span className="tag" style={{backgroundColor: primaryColor}}>{props.tag}</span> : null}
                     <span className="date">{props.date}</span>

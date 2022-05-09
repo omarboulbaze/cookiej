@@ -138,10 +138,12 @@ function Add(){
             date: date,
             rank: rank,
             tag: tag
-        })
+        },{headers: {'Content-Type': 'multipart/form-data'}})
         .then(()=>{
             setAlert(<Alert boldText="Congratulations!" text=" Your cookie has been added to your cookie jar." hue="120" icon={faCheckCircle}/>);
             setImage(null);
+            setImageUploaded(null);
+            setImageUploaded(false);
             setTitle("");
             setDescription("");
             setDate(today);

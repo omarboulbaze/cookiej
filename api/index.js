@@ -14,16 +14,19 @@ app.use(express.json())
 const cors = require('cors');
 app.use(cors());
 
+// Core node module
+const path = require('path');
+
 // #endregion Imports
 
 // Multer
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: (req, file, cb)=>{
-    cb(null,'uploads/')
+    cb(null,'images/')
   },
   filename: (req, file, cb)=>{
-    cb(null, new Date().getMilliseconds() + file.originalname);
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
   }
 });
 const upload = multer({storage: storage});
@@ -51,7 +54,7 @@ app.post('/api/addCookie', upload.single('image'),(req, res)=> {
 
     const cookie = new Cookie({
         _id: new mongoose.Types.ObjectId(),
-        image: req.file.path,
+        image: req.file ? req.file.filename : null,
         title: req.body.title,
         description: req.body.description,
         date: req.body.date,
@@ -70,19 +73,23 @@ app.post('/api/addCookie', upload.single('image'),(req, res)=> {
 
 
 // Returning all reviews that exists in the database.
-app.get('/api/', (req,res)=>
-            {
-            Cookie.find({}, (err, data) =>{
-              if(err) {
-                console.log(err);
-                res.status(500).send();
-              } else {
-              res.status(200).json(data);
-              }
-            })
-            
-            }
-        );
+app.get('/api/', (req,res)=> {
+  Cookie.find({}, (err, data) =>{
+  if(err) {
+    console.log(err);
+    res.status(500).send();
+    } else {
+        res.status(200).json(data);
+}})
+
+}
+);
+
+// Get image
+app.get('/api/images/:fileName', function (req, res) {
+  const filePath = `${__dirname}/images/${req.params.fileName}`
+  res.sendFile(filePath)
+});
 
 const PORT = process.env.PORT || 8801;
 app.listen(PORT, ()=>{
