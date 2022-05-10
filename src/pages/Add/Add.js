@@ -184,7 +184,7 @@ function Add(){
                         <img src={imageUploaded ? imgData : cookieBg} alt="Cookie Preview"/>
                         <label>{imageUploaded ? <FontAwesomeIcon icon={faCheckCircle} className="icon" style={{color:"white"}}/> : <FontAwesomeIcon icon={faCamera} className="icon"/> }</label>
                         {/* Input is hidden. Only the label is visible which is linked to the input tag. */}
-                        <input ref={imageInputFile} capture accept="image/*" type="file" style={{display:"none"}} onChange={ e => onImageUpload(e)}/>
+                        <input ref={imageInputFile} accept="image/*" type="file" style={{display:"none"}} onChange={ e => onImageUpload(e)}/>
                         <label className="label" style={{padding:"0.5rem"}}>{imageUploaded ? "Image successfully added!" : "Add Image"}</label>
                 </div>
                 {/* Title input */}
