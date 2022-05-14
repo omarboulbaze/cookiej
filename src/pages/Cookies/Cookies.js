@@ -11,6 +11,8 @@ import cookieLogoDetailed from "../../assets/cookieLogo.png"
 // Components
 import Topbar from "../Components/Topbar/Topbar";
 import {timeAgo} from '../Add/Add';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 //  Importing axios
 const axios = require('axios');
@@ -67,8 +69,8 @@ function Cookies(){
                         break;
                 }
 
-                
-            return <CookieItem image={c.image ? apiUrl+'/images/'+ c.image : cookieLogoDetailed} title={c.title} description={c.description} date={timeAgo(c.date).toString().includes("hours") ? "Today" : timeAgo(c.date)} rank={c.rank} tag={c.tag} key={i} hue={hue} 
+            return <CookieItem  key={c._id} image={c.image ? apiUrl+'/images/'+ c.image : cookieLogoDetailed} title={c.title} description={c.description} 
+                                date={timeAgo(c.date).toString().includes("hours") ? "Today" : timeAgo(c.date)} rank={c.rank} tag={c.tag} hue={hue} 
                                 lightness={lightness} lightnessBg={lightnessBg} saturation={saturation} saturationBg={saturationBg}/>
             })
             :
@@ -89,8 +91,46 @@ function CookieItem(props){
     const primaryColor = `hsl(${props.hue}, ${props.saturation}, ${props.lightness})`
     const backgroundColor = `hsl(${props.hue}, ${props.saturationBg}, ${props.lightnessBg})`
 
+    // Handling swipe left or right for deleting or editing a cookie
+
+    const [touchStartX, setTouchStartX] = useState(0);
+    const [touchEndX, setTouchEndX] = useState(0);
+    const [editVisible, setEditVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+
+
+    function firstTouch(e){
+        setTouchStartX(e.changedTouches[0].screenX)
+    }
+    function lastTouch(e){
+        setTouchEndX(e.changedTouches[0].screenX)
+    }
+
+    function cookieClick(){
+        setDeleteVisible(false)
+        setEditVisible(false)
+        setTouchStartX(0)
+        setTouchEndX(0)
+    }
+
+    useEffect(()=>{
+        console.log("start",touchStartX)
+        console.log("end",touchEndX)
+        if (touchEndX < touchStartX){
+            setEditVisible(false)
+            setDeleteVisible(true)
+        } 
+        if (touchEndX > touchStartX){
+            setDeleteVisible(false)
+            setEditVisible(true)
+        } 
+    },[touchEndX,touchStartX])
+
     return(
-        <div className="cookie-container" style={{backgroundColor: backgroundColor}}>
+        <div className="cookie-container" style={{backgroundColor: backgroundColor}} onTouchStart={ e => firstTouch(e)} onTouchEnd={ e => lastTouch(e)} onClick={()=> cookieClick()}>
+            <div className="cookie-side-edit" style={ editVisible ? {visibility:"visible"} : {display:"none"}}>
+                <FontAwesomeIcon icon={faPen} className="icon"/>
+            </div>
             <div className="img-tag-date-container">
                 <img src={props.image} alt="Visual memories"/>
                 <div className="tag-date-container" style={!props.tag ? {justifyContent:"center"} : null}>
@@ -103,6 +143,9 @@ function CookieItem(props){
                 <p>{props.description}</p>  
             </div>
             <div className="cookie-side-rank" style={{backgroundColor: primaryColor}}>
+            </div>
+            <div className="cookie-side-delete" style={ deleteVisible ? {visibility:"visible"} : {display:"none"}}>
+                <FontAwesomeIcon icon={faTrashAlt} className="icon"/>
             </div>
         </div>
     )
