@@ -91,46 +91,23 @@ function CookieItem(props){
     const primaryColor = `hsl(${props.hue}, ${props.saturation}, ${props.lightness})`
     const backgroundColor = `hsl(${props.hue}, ${props.saturationBg}, ${props.lightnessBg})`
 
-    // Handling swipe left or right for deleting or editing a cookie
+    // OnClick show the side button with an option to edit or delete the cookie
+    const [sideExpanded, setSideExpanded] = useState(false);
+    const [animationClass, setAnimationClass] = useState("cookie-side-rank hide");
 
-    const [touchStartX, setTouchStartX] = useState(0);
-    const [touchEndX, setTouchEndX] = useState(0);
-    const [editVisible, setEditVisible] = useState(false);
-    const [deleteVisible, setDeleteVisible] = useState(false);
-
-
-    function firstTouch(e){
-        setTouchStartX(e.changedTouches[0].screenX)
+    
+    function onCookieClick(){
+        if(sideExpanded){
+            setSideExpanded(false)
+            setAnimationClass("cookie-side-rank hide")
+        }else{
+            setSideExpanded(true)
+            setAnimationClass("cookie-side-rank-expanded")
+        }
     }
-    function lastTouch(e){
-        setTouchEndX(e.changedTouches[0].screenX)
-    }
-
-    function cookieClick(){
-        setDeleteVisible(false)
-        setEditVisible(false)
-        setTouchStartX(0)
-        setTouchEndX(0)
-    }
-
-    useEffect(()=>{
-        console.log("start",touchStartX)
-        console.log("end",touchEndX)
-        if (touchEndX < touchStartX){
-            setEditVisible(false)
-            setDeleteVisible(true)
-        } 
-        if (touchEndX > touchStartX){
-            setDeleteVisible(false)
-            setEditVisible(true)
-        } 
-    },[touchEndX,touchStartX])
 
     return(
-        <div className="cookie-container" style={{backgroundColor: backgroundColor}} onTouchStart={ e => firstTouch(e)} onTouchEnd={ e => lastTouch(e)} onClick={()=> cookieClick()}>
-            <div className="cookie-side-edit" style={ editVisible ? {visibility:"visible"} : {display:"none"}}>
-                <FontAwesomeIcon icon={faPen} className="icon"/>
-            </div>
+        <div className="cookie-container" style={{backgroundColor: backgroundColor}} onClick={()=>onCookieClick()}>
             <div className="img-tag-date-container">
                 <img src={props.image} alt="Visual memories"/>
                 <div className="tag-date-container" style={!props.tag ? {justifyContent:"center"} : null}>
@@ -142,10 +119,22 @@ function CookieItem(props){
                 <h1>{props.title}</h1>
                 <p>{props.description}</p>  
             </div>
-            <div className="cookie-side-rank" style={{backgroundColor: primaryColor}}>
-            </div>
-            <div className="cookie-side-delete" style={ deleteVisible ? {visibility:"visible"} : {display:"none"}}>
-                <FontAwesomeIcon icon={faTrashAlt} className="icon"/>
+            <div className={animationClass} style={{backgroundColor: primaryColor}}>
+                {
+                    sideExpanded ?
+                    <>
+                    <div className="icon">
+                        <FontAwesomeIcon icon={faPen} />
+                    </div>
+                    <div className="hr"></div>
+                    <div className="icon">
+                        <FontAwesomeIcon icon={faTrashAlt} />
+                    </div>
+                    </>
+                    :
+                    null
+                }
+                
             </div>
         </div>
     )
