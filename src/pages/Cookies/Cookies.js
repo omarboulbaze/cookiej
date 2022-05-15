@@ -10,9 +10,10 @@ import cookieLogoDetailed from "../../assets/cookieLogo.png"
 
 // Components
 import Topbar from "../Components/Topbar/Topbar";
+import Alert from "../Components/Alert/Alert";
 import {timeAgo} from '../Add/Add';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrashAlt, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 //  Importing axios
 const axios = require('axios');
@@ -33,8 +34,13 @@ function Cookies(){
                     }).catch(e => console.log('GET request', e));
                 },[])
 
+    // Alert management
+    const [alert, setAlert] = useState(null);
+
+
     return(
         <>
+        {alert}
         <Topbar text="My Cookies"/>
         <div className="cookie-grouper">
         {cookiesData ?
@@ -69,9 +75,11 @@ function Cookies(){
                         break;
                 }
 
-            return <CookieItem  key={c._id} image={c.image ? apiUrl+'/images/'+ c.image : cookieLogoDetailed} title={c.title} description={c.description} 
+            return <CookieItem  key={c._id} id={c._id} image={c.image ? apiUrl+'/images/'+ c.image : cookieLogoDetailed} title={c.title} description={c.description} 
                                 date={timeAgo(c.date).toString().includes("hours") ? "Today" : timeAgo(c.date)} rank={c.rank} tag={c.tag} hue={hue} 
-                                lightness={lightness} lightnessBg={lightnessBg} saturation={saturation} saturationBg={saturationBg}/>
+                                lightness={lightness} lightnessBg={lightnessBg} saturation={saturation} saturationBg={saturationBg} cookiesData={cookiesData} setCookiesData={setCookiesData}
+                                setAlert={setAlert}
+                                />
             })
             :
             <div className="empty-container" style={{maxWidth:"640px", margin:"auto"}}>
@@ -93,20 +101,31 @@ function CookieItem(props){
 
     // OnClick show the side button with an option to edit or delete the cookie
     const [sideExpanded, setSideExpanded] = useState(false);
-    const [animationClass, setAnimationClass] = useState("cookie-side-rank hide");
+    const [animationClass, setAnimationClass] = useState("cookie-side-rank");
 
     
     function onCookieClick(){
         if(sideExpanded){
-            setSideExpanded(false)
             setAnimationClass("cookie-side-rank hide")
+            setSideExpanded(false)
         }else{
             setSideExpanded(true)
             setAnimationClass("cookie-side-rank-expanded")
         }
     }
 
+     function deleteCookie(){
+        if(window.confirm("Delete this cookie ?")){
+            axios.delete( apiUrl + '/delete/' + props.id )
+            .then(res => console.log(res.data));
+            props.setAlert(<Alert text="The cookie has been successfully removed from your cookie jar." hue="120" icon={faCheckCircle}/>)
+            props.setCookiesData(props.cookiesData.filter((cookies => cookies._id !== props.id)))
+            }
+
+    }
+
     return(
+        <>
         <div className="cookie-container" style={{backgroundColor: backgroundColor}} onClick={()=>onCookieClick()}>
             <div className="img-tag-date-container">
                 <img src={props.image} alt="Visual memories"/>
@@ -127,7 +146,7 @@ function CookieItem(props){
                         <FontAwesomeIcon icon={faPen} />
                     </div>
                     <div className="hr"></div>
-                    <div className="icon">
+                    <div className="icon" onClick={()=>deleteCookie()}>
                         <FontAwesomeIcon icon={faTrashAlt} />
                     </div>
                     </>
@@ -137,6 +156,7 @@ function CookieItem(props){
                 
             </div>
         </div>
+        </>
     )
 }
 

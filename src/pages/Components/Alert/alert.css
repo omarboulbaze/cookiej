@@ -31,11 +31,14 @@
         animation: hide .3s ease-in-out forwards;
 }
  
+.alert-wrapper{
+    display: flex;
+    justify-content: center;
+}
 .alert-container{
-    position: absolute;
+    position: fixed;
     top: 2px;
     background-color: var(--container);
-    width: 100%;
     z-index: 1;
     /* Padding will now count when setting up the width property */
     box-sizing: border-box; 

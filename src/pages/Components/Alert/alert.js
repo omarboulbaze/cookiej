@@ -21,7 +21,7 @@ function Alert(props){
       }, [props.hue])
 
     return(
-        <>
+        <div className="alert-wrapper">
         {visible ?
         <div className={animationClass}>
         <div className="side"></div>
@@ -33,7 +33,7 @@ function Alert(props){
         null
         }
         
-        </>
+        </div>
     )
 
 }

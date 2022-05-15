@@ -86,11 +86,22 @@ app.get('/api/', (req,res)=> {
 );
 
 // Get image
-app.get('/api/images/:fileName', function (req, res) {
+app.get('/api/images/:fileName', (req, res) => {
   const filePath = `${__dirname}/images/${req.params.fileName}`
   res.sendFile(filePath)
 });
 
+// Deleting a cookie by ID
+app.delete('/api/delete/:id', (req, res) => {
+
+  Cookie.findOneAndDelete({_id: req.params.id}).exec((err, cookie) => {
+      if(err) return res.status(500).json({code: 500, message: 'There was an error deleting the cookie', error: err})
+      res.status(200).json({code: 200, message: 'Cookie deleted', deletedCookie: cookie})
+    });
+  
+});
+
+// Setting up the API on the port
 const PORT = process.env.PORT || 8801;
 app.listen(PORT, ()=>{
    console.log(`Server started on ${PORT}...`)
