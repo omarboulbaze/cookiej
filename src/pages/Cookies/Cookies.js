@@ -36,6 +36,15 @@ function Cookies(){
 
     // Alert management
     const [alert, setAlert] = useState(null);
+    // If alert becomes different than (null) wait 3 seconds then change it back to null.
+    useEffect(()=>{
+        
+        if(alert!==null){
+           setTimeout(()=>setAlert(null),3000)
+        }
+        //TODO: Fix timeout being applied on future deleted cookies, each cookie should generate it's own alert.
+        
+    },[alert])
 
     return(
         <>
@@ -77,7 +86,7 @@ function Cookies(){
             return <CookieItem  key={c._id} id={c._id} image={c.image ? apiUrl+'/images/'+ c.image : cookieLogoDetailed} title={c.title} description={c.description} 
                                 date={timeAgo(c.date).toString().includes("hours") ? "Today" : timeAgo(c.date)} rank={c.rank} tag={c.tag} hue={hue} 
                                 lightness={lightness} lightnessBg={lightnessBg} saturation={saturation} saturationBg={saturationBg} cookiesData={cookiesData} setCookiesData={setCookiesData}
-                                setAlert={setAlert}
+                                setAlert={setAlert} alert={alert}
                                 />
             })
             :
@@ -114,17 +123,14 @@ function CookieItem(props){
     }
 
     function deleteCookie(){
-        
-        if(window.confirm("Delete this cookie ?")){
-            axios.delete( apiUrl + '/delete/' + props.id )
-            .then(res => console.log(res.data));
-            props.setAlert(<Alert text="The cookie has been successfully removed from your cookie jar." hue="120" icon={faCheckCircle}/>)
-            props.setCookiesData(props.cookiesData.filter((cookies => cookies._id !== props.id)))
-            setTimeout(()=>{
-                props.setAlert(null)
-            },3000)
+            
+            if(window.confirm("Delete this cookie ?")){
+                axios.delete( apiUrl + '/delete/' + props.id )
+                .then(res => console.log(res.data));
+                props.setAlert(<Alert text="The cookie has been successfully removed from your cookie jar." hue="120" icon={faCheckCircle}/>)
+                props.setCookiesData(props.cookiesData.filter((cookies => cookies._id !== props.id)))
             }
-            //TODO: Make sure there's a hide animation when the time is up (3 seconds) and that the timer resets everytime the user deletes another cookie.  
+        
     }
 
     return(
