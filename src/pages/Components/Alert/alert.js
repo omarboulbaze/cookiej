@@ -9,9 +9,10 @@ function Alert(props){
     const [visible, setVisible] = useState(true)
     const [animationClass, setAnimationClass] = useState("alert-container show")
 
-    // Using "then()" so I can be able to apply the hiding animation before removing the component from the page
-    function hideAlert(){
-        setAnimationClass("alert-container hide").then(()=>setVisible(false))
+    // Using setTimeout so I can be able to apply the hiding animation before removing the component from the page (Animation duration and timeout both equal 300 ms)
+     function hideAlert(){
+        setAnimationClass("alert-container hide");
+        setTimeout(()=>setVisible(false), 300); // setTimeout only works if the function is called with an array function ()=>{}. 
     }
 
     // Dynamically changing the css variables when hue prop changes

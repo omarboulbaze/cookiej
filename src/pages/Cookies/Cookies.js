@@ -25,7 +25,7 @@ const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PRO
 function Cookies(){
 
     // Retrieving the cookies from the database
-    const [cookiesData, setCookiesData] = useState();
+    const [cookiesData, setCookiesData] = useState([]);
 
     useEffect(()=>{
                     axios.get(apiUrl+'/')
@@ -37,13 +37,12 @@ function Cookies(){
     // Alert management
     const [alert, setAlert] = useState(null);
 
-
     return(
         <>
         {alert}
         <Topbar text="My Cookies"/>
         <div className="cookie-grouper">
-        {cookiesData ?
+        {cookiesData.length > 0 ?
             cookiesData.map((c,i)=> {
                 let hue;
                 let saturation = "100%" ;
@@ -114,14 +113,18 @@ function CookieItem(props){
         }
     }
 
-     function deleteCookie(){
+    function deleteCookie(){
+        
         if(window.confirm("Delete this cookie ?")){
             axios.delete( apiUrl + '/delete/' + props.id )
             .then(res => console.log(res.data));
             props.setAlert(<Alert text="The cookie has been successfully removed from your cookie jar." hue="120" icon={faCheckCircle}/>)
             props.setCookiesData(props.cookiesData.filter((cookies => cookies._id !== props.id)))
+            setTimeout(()=>{
+                props.setAlert(null)
+            },3000)
             }
-
+            //TODO: Make sure there's a hide animation when the time is up (3 seconds) and that the timer resets everytime the user deletes another cookie.  
     }
 
     return(
