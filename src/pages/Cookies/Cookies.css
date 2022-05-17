@@ -70,7 +70,7 @@
 }
 .tag-date-container{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content:space-between;
     flex-wrap: wrap;
     padding: 0.4rem;

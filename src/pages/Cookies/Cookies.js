@@ -36,15 +36,6 @@ function Cookies(){
 
     // Alert management
     const [alert, setAlert] = useState(null);
-    // If alert becomes different than (null) wait 3 seconds then change it back to null.
-    useEffect(()=>{
-        
-        if(alert!==null){
-           setTimeout(()=>setAlert(null),3000)
-        }
-        //TODO: Fix timeout being applied on future deleted cookies, each cookie should generate it's own alert.
-        
-    },[alert])
 
     return(
         <>
@@ -127,7 +118,8 @@ function CookieItem(props){
             if(window.confirm("Delete this cookie ?")){
                 axios.delete( apiUrl + '/delete/' + props.id )
                 .then(res => console.log(res.data));
-                props.setAlert(<Alert text="The cookie has been successfully removed from your cookie jar." hue="120" icon={faCheckCircle}/>)
+                props.setAlert(null) // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
+                setTimeout(()=> { props.setAlert(<Alert text="The cookie has been successfully removed from your cookie jar." hue="120" icon={faCheckCircle}/>)},100)
                 props.setCookiesData(props.cookiesData.filter((cookies => cookies._id !== props.id)))
             }
         
