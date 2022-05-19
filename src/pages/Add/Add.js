@@ -48,6 +48,8 @@ export const timeAgo = (date) => {
 
 function Add(){
 
+    document.title = "New Cookie | Cookie Jar";
+
     const today = new Date().toLocaleDateString('en-CA');
     
     // useState from Title, Description, Date, Rank, Tags, Image.

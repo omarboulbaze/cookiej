@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Topbar from "../Components/Topbar/Topbar";
 import "./Challenges.css";
 function Challenges(){
+    
+    document.title = "Challenges | Cookie Jar";
 
     return(
         <>

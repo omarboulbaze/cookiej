@@ -24,6 +24,8 @@ const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PRO
 
 function Cookies(){
 
+    document.title = "My Cookies | Cookie Jar";
+
     // Retrieving the cookies from the database
     const [cookiesData, setCookiesData] = useState([]);
 
