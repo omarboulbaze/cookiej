@@ -1,3 +1,32 @@
+/* Animation keyframes */
+
+@keyframes sideReveal {
+    0%{
+        min-width: 20px;
+    }
+    100%{
+        min-width: 100px;
+    }
+}
+@keyframes textReveal {
+    0%{
+        font-size: 0rem;
+    }
+    100%{
+        font-size: 2rem;
+    }
+}
+
+@keyframes sideHide {
+    0%{
+        min-width: 100px;
+    }
+    100%{
+        min-width: 20px;
+    }
+}
+
+
 .empty-container{
     display: flex;
     flex-direction: column;
@@ -55,6 +84,7 @@
     border-radius: 5px;
 
 }
+
 .cookie-info{
     display: flex;
     flex-direction: column;
@@ -76,14 +106,14 @@
     padding: 0.4rem;
 }
 .tag-date-container .tag{
-    border-radius: 5px;
+    border-radius: 5px 5px 0px 0px;
     padding: 0.3rem;
     flex-grow: 1;
     text-align: center;
 }
 .tag-date-container .date{
     background-color: hsla(0, 0%, 100%, 0.534);
-    border-radius: 5px;
+    border-radius: 0px 0px 5px 5px;
     padding: 0.3rem;
     flex-grow: 1;
     text-align: center;
@@ -132,35 +162,89 @@
     opacity: 0.2;
 }
 
-/* Animation keyframes */
-
-@keyframes sideReveal {
-    0%{
-        min-width: 20px;
-    }
-    100%{
-        min-width: 100px;
-    }
+/* Cookie Edit Mode */
+.img-edit-container{
+    position: relative;
+    width: 100%;
+    height: 10rem;
+    object-fit: cover;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
 }
-@keyframes textReveal {
-    0%{
-        font-size: 0rem;
-    }
-    100%{
-        font-size: 2rem;
-    }
-}
-
-@keyframes sideHide {
-    0%{
-        min-width: 100px;
-    }
-    100%{
-        min-width: 20px;
-    }
+.img-edit-container img{
+    position: absolute;
+    z-index: 0;
+    filter: blur(1px);
+    opacity: 0.7;
 }
 
+.img-edit-container .icon{
+    color: rgb(255, 255, 255);
+    z-index: 1;
+    font-size: 2rem;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: textReveal 0.3s ease-out;
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.63));
+}
 
+.img-edit-container .icon:active{
+    background-color: rgba(255, 255, 255, 0.308);
+    filter: none;
+}
+.tag-date-container.edit .tag:active, .tag-date-container.edit .date:active {
+    opacity: 0.4;
+}
 
+.cookie-info.edit h1, .cookie-info.edit p{
+    background-color: rgba(255, 255, 255, 0.397);
+    border-radius: 5px;
+}
+.cookie-info.edit h1:active, .cookie-info.edit p:active{
+    opacity: 0.5;
+}
+.edit-confirm{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: rgb(0, 0, 0);
+    border-radius: 60% 0px 0px 0px;
+    box-shadow: -1px -1px 5px rgba(0, 0, 0, 0.164);
+}
+.edit-confirm:active{
+opacity: 0.5;
+}
+.edit-confirm .icon{
+    padding: 1rem;
+    padding-left: 2rem;
+    padding-top: 2rem;
+    font-size: 2rem;
+    color:white;
+}
 
+.edit-cancel{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgb(0, 0, 0);
+    border-radius: 0px 0px 0px 60%;
+    box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.164);
+}
 
+.edit-cancel:active{
+    opacity: 0.5;
+    }
+    .edit-cancel .icon{
+        padding: 1rem;
+        padding-left: 2rem;
+        padding-bottom: 1.5rem;
+        font-size: 2.5rem;
+        color:white;
+    }
