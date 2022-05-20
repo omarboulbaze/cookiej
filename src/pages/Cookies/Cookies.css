@@ -25,6 +25,23 @@
         min-width: 20px;
     }
 }
+@keyframes contentSlide {
+    
+    100%{
+        transform: translateX(-640px);
+        opacity: 0;
+    }
+}
+@keyframes editSlide {
+    0%{
+        opacity: 0;
+        transform: translateX(640px);
+    }
+    100%{
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
 
 
 .empty-container{
@@ -57,6 +74,7 @@
     margin-top: 2rem;
     margin-bottom: 8rem;
 }
+
 .cookie-container{
     position: relative;
     display: flex;
@@ -82,7 +100,6 @@
     height: 10rem;
     object-fit: cover;
     border-radius: 5px;
-
 }
 
 .cookie-info{
@@ -210,41 +227,74 @@
 .cookie-info.edit h1:active, .cookie-info.edit p:active{
     opacity: 0.5;
 }
+
+.edit-side-container{
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
 .edit-confirm{
     position: absolute;
     bottom: 0;
     right: 0;
     background-color: rgb(0, 0, 0);
-    border-radius: 60% 0px 0px 0px;
+    border-radius: 50% 0px 0px 0px;
     box-shadow: -1px -1px 5px rgba(0, 0, 0, 0.164);
 }
-.edit-confirm:active{
-opacity: 0.5;
-}
-.edit-confirm .icon{
-    padding: 1rem;
-    padding-left: 2rem;
-    padding-top: 2rem;
-    font-size: 2rem;
-    color:white;
-}
-
 .edit-cancel{
     position: absolute;
     top: 0;
     right: 0;
     background-color: rgb(0, 0, 0);
-    border-radius: 0px 0px 0px 60%;
+    border-radius: 0px 0px 0px 50%;
+    box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.164);
+}
+.edit-tag{
+    position: absolute;
+    right: 0;
+    background-color: rgb(0, 0, 0);
+    border-radius: 100% 0 0 100%;
     box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.164);
 }
 
+.edit-confirm:active{
+opacity: 0.5;
+}
 .edit-cancel:active{
     opacity: 0.5;
-    }
-    .edit-cancel .icon{
-        padding: 1rem;
-        padding-left: 2rem;
-        padding-bottom: 1.5rem;
-        font-size: 2.5rem;
-        color:white;
-    }
+}
+.edit-tag:active{
+    opacity: 0.5;
+}
+
+.edit-confirm .icon{
+    padding: 0.8rem;
+    padding-right: 0.5rem;
+    font-size: 2rem;
+    color:white;
+}
+.edit-cancel .icon{
+    padding: 0.8rem;
+    padding-right: 0.5rem;
+    font-size: 2rem;
+    color:white;
+}
+.edit-tag .icon{
+    padding: 0.5rem;
+    padding-right: 0.5rem;
+    font-size: 2rem;
+    color:white;
+}
+
+/* Applying animation to the content of the cookie */
+.edit-content-animation{
+    animation: contentSlide 0.3s ease-in forwards;
+}
+/* Applying animation to the edited mode of the cookie */
+.edit-mode-animation{
+    animation: editSlide 0.3s ease-out forwards;
+}

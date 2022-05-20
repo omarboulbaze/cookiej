@@ -13,7 +13,7 @@ import Topbar from "../Components/Topbar/Topbar";
 import Alert from "../Components/Alert/Alert";
 import {timeAgo} from '../Add/Add';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTag } from "@fortawesome/free-solid-svg-icons";
 
 //  Importing axios
 const axios = require('axios');
@@ -111,8 +111,8 @@ function CookieItem(props){
             setAnimationClass("cookie-side-rank hide")
             setSideExpanded(false)
         }else{
-            setSideExpanded(true)
             setAnimationClass("cookie-side-rank-expanded")
+            setSideExpanded(true)
         }
     }
 
@@ -128,71 +128,93 @@ function CookieItem(props){
         
     }
 
+    // Cookie Edit mode
+    const [editMode, setEditMode] = useState(false)
+    const [contentAnimation, setContentAnimation] = useState("")
+    const [editAnimation, setEditAnimation] = useState("")
+
     function editCookie(){
-        // When the "edit" button is pressed, do this
+        if(!editMode){
+            setContentAnimation("edit-content-animation")
+            setEditAnimation("edit-mode-animation")
+            setTimeout(()=> {setEditMode(true)},300)
+        }else{
+            setContentAnimation("")
+            setEditAnimation("")
+            setEditMode(false)
+        }
     }
 
     return(
         <>
-        <div className="cookie-container" style={{backgroundColor: backgroundColor}} onClick={()=>onCookieClick()}>
-            <div className="img-tag-date-container">
-                <img src={props.image} alt="Visual memories"/>
-                <div className="tag-date-container">
-                    {props.tag ? <span className="tag" style={{backgroundColor: primaryColor}}>{props.tag}</span> : null}
-                    <span className="date">{props.date}</span>
+        {
+            !editMode ?
+            <div className="cookie-container" style={{backgroundColor: backgroundColor}} onClick={()=>onCookieClick()}>
+                <div className={"img-tag-date-container " + contentAnimation}>
+                    <img src={props.image} alt="Visual memories"/>
+                    <div className="tag-date-container">
+                        {props.tag ? <span className="tag" style={{backgroundColor: primaryColor}}>{props.tag}</span> : null}
+                        <span className="date">{props.date}</span>
+                    </div>
+                </div>
+                <div className={"cookie-info " + contentAnimation}>
+                    <h1>{props.title}</h1>
+                    <p>{props.description}</p>  
+                </div>
+                <div className={animationClass + " " + contentAnimation} style={{backgroundColor: primaryColor}}>
+                    {
+                        sideExpanded ?
+                        <>
+                        <div className="icon" onClick={()=>editCookie()}>
+                            <FontAwesomeIcon icon={faPen}/>
+                        </div>
+                        <div className="hr"></div>
+                        <div className="icon" onClick={()=>deleteCookie()}>
+                            <FontAwesomeIcon icon={faTrashAlt} />
+                        </div>
+                        </>
+                        :
+                        null
+                    }
                 </div>
             </div>
-            <div className="cookie-info">
-                <h1>{props.title}</h1>
-                <p>{props.description}</p>  
-            </div>
-            <div className={animationClass} style={{backgroundColor: primaryColor}}>
-                {
-                    sideExpanded ?
-                    <>
-                    <div className="icon">
-                        <FontAwesomeIcon icon={faPen} onClick={()=>editCookie()} />
+            :
+            <div className="cookie-container" style={{backgroundColor: primaryColor}}>
+                <div className={"img-tag-date-container "  + editAnimation}>
+                    <div className="img-edit-container">
+                        <img src={props.image} alt="Visual memories" className="img-edit"/>
+                        <div className="icon">
+                            <FontAwesomeIcon icon={faRotate}/>
+                        </div>
+                        <div className="icon">
+                            <FontAwesomeIcon icon={faTrashAlt} />
+                        </div>
                     </div>
-                    <div className="hr"></div>
-                    <div className="icon" onClick={()=>deleteCookie()}>
-                        <FontAwesomeIcon icon={faTrashAlt} />
-                    </div>
-                    </>
-                    :
-                    null
-                }
                 
-            </div>
-        </div>
-        <div className="cookie-container" style={{backgroundColor: primaryColor}}>
-            <div className="img-tag-date-container">
-                <div className="img-edit-container">
-                    <img src={props.image} alt="Visual memories" className="img-edit"/>
-                    <div className="icon">
-                        <FontAwesomeIcon icon={faRotate}/>
-                    </div>
-                    <div className="hr"></div>
-                    <div className="icon">
-                        <FontAwesomeIcon icon={faTrashAlt} />
+                    <div className="tag-date-container edit">
+                        {props.tag ? <span className="tag" style={{backgroundColor: backgroundColor}}>{props.tag}</span> : null}
+                        <span className="date">{props.date}</span>
                     </div>
                 </div>
-               
-                <div className="tag-date-container edit">
-                    {props.tag ? <span className="tag" style={{backgroundColor: backgroundColor}}>{props.tag}</span> : null}
-                    <span className="date">{props.date}</span>
+                <div className={"cookie-info edit " + editAnimation}>
+                    <h1>{props.title}</h1>
+                    <p>{props.description}</p>  
+                </div>
+                <div className={"edit-side-container "  + editAnimation}>
+                    <div className="edit-cancel" style={{backgroundColor: backgroundColor}} onClick={()=>editCookie()} >
+                        <FontAwesomeIcon icon={faXmark} className="icon" style={{color: primaryColor}}/>
+                    </div>
+                    <div className="edit-tag" style={{backgroundColor: backgroundColor}} >
+                        <FontAwesomeIcon icon={faTag} className="icon" style={{color: primaryColor}}/>
+                    </div>
+                    <div className="edit-confirm" style={{backgroundColor: backgroundColor}} >
+                        <FontAwesomeIcon icon={faFloppyDisk} className="icon" style={{color: primaryColor}}/>
+                    </div>
                 </div>
             </div>
-            <div className="cookie-info edit">
-                <h1>{props.title}</h1>
-                <p>{props.description}</p>  
-            </div>
-            <div className="edit-cancel" style={{backgroundColor: backgroundColor}} >
-                <FontAwesomeIcon icon={faXmark} className="icon" style={{color: primaryColor}}/>
-            </div>
-            <div className="edit-confirm" style={{backgroundColor: backgroundColor}} >
-                <FontAwesomeIcon icon={faFloppyDisk} className="icon" style={{color: primaryColor}}/>
-            </div>
-        </div>
+        }
+        
+        
         </>
     )
 }
