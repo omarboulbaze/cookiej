@@ -145,6 +145,24 @@ function CookieItem(props){
         }
     }
 
+    // When a user tries to modify an input while in the Edit mode
+    const [overlayEditPlaceholder, setOverlayEditPlaceholder] = useState(null);
+
+    // Making a functional react component to be able to pass down props (Component name should be capitalized otherwise it's considered a component's function.)
+    function OverlayEdit(props){
+        return(
+                    <div className="edit-overlay-container">
+                        <span>{props.name}</span>
+                        <textarea>{props.value}</textarea>
+                        <div className="cancel" onClick={()=>props.setOverlayEditPlaceholder(null)}><FontAwesomeIcon icon={faXmark} className="icon"/></div>
+                        <div className="save"><FontAwesomeIcon icon={faFloppyDisk} className="icon"/></div>
+                    </div>
+        )
+    }
+    // Dynamically detects which input was clicked and pass it to the function
+    function editModeInputClick(name, value){
+        setOverlayEditPlaceholder(<OverlayEdit name={name} value={value} setOverlayEditPlaceholder={setOverlayEditPlaceholder}/>)
+    }
     return(
         <>
         {
@@ -192,13 +210,13 @@ function CookieItem(props){
                     </div>
                 
                     <div className="tag-date-container edit">
-                        {props.tag ? <span className="tag" style={{backgroundColor: backgroundColor}}>{props.tag}</span> : null}
+                        {props.tag ? <span onClick={()=>editModeInputClick("Tag",props.tag)} className="tag" style={{backgroundColor: backgroundColor}}>{props.tag}</span> : null}
                         <span className="date">{props.date}</span>
                     </div>
                 </div>
                 <div className={"cookie-info edit " + editAnimation}>
-                    <h1>{props.title}</h1>
-                    <p>{props.description}</p>  
+                    <h1 onClick={()=>editModeInputClick("Title",props.title)}>{props.title}</h1>
+                    <p onClick={()=>editModeInputClick("Description",props.description)}>{props.description}</p>  
                 </div>
                 <div className={"edit-side-container "  + editAnimation}>
                     <div className="edit-cancel" style={{backgroundColor: backgroundColor}} onClick={()=>editCookie()} >
@@ -211,6 +229,10 @@ function CookieItem(props){
                         <FontAwesomeIcon icon={faFloppyDisk} className="icon" style={{color: primaryColor}}/>
                     </div>
                 </div>
+                {
+                    overlayEditPlaceholder
+                }
+                
             </div>
         }
         
