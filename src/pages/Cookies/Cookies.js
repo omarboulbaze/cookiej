@@ -137,7 +137,7 @@ function CookieItem(props){
         if(!editMode){
             setContentAnimation("edit-content-animation")
             setEditAnimation("edit-mode-animation")
-            setTimeout(()=> {setEditMode(true)},300)
+            setTimeout(()=> {setEditMode(true)},200)
         }else{
             setContentAnimation("")
             setEditAnimation("")

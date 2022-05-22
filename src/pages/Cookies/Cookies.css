@@ -292,11 +292,11 @@ opacity: 0.5;
 
 /* Applying animation to the content of the cookie */
 .edit-content-animation{
-    animation: contentSlide 0.3s ease-in forwards;
+    animation: contentSlide 0.2s ease-in forwards;
 }
 /* Applying animation to the edited mode of the cookie */
 .edit-mode-animation{
-    animation: editSlide 0.3s ease-out forwards;
+    animation: editSlide 0.5s ease-out forwards;
 }
 
 /* When the user clicks on a specific input while on edit mode */
@@ -311,8 +311,6 @@ opacity: 0.5;
     flex-direction: column;
 }
 .edit-overlay-container span{
-    position: absolute;
-    top: 0;
     font-size: 1.5rem;
     color: white;
     text-align: center;
@@ -323,6 +321,7 @@ opacity: 0.5;
     padding: 1rem;
     box-sizing: border-box;
     width: 70%;
+    height: 70%;
     font-family: 'Lato';
     resize: none;
     caret-color:#ffb656;
