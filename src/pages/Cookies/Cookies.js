@@ -78,7 +78,7 @@ function Cookies(){
                 }
 
             return <CookieItem  key={c._id} id={c._id} image={c.image ? apiUrl+'/images/'+ c.image : cookieLogoDetailed} title={c.title} description={c.description} 
-                                date={timeAgo(c.date).toString().includes("hours") ? "Today" : timeAgo(c.date)} rank={c.rank} tag={c.tag} hue={hue} 
+                                date={c.date} rank={c.rank} tag={c.tag} hue={hue} 
                                 lightness={lightness} lightnessBg={lightnessBg} saturation={saturation} saturationBg={saturationBg} cookiesData={cookiesData} setCookiesData={setCookiesData}
                                 setAlert={setAlert} alert={alert}
                                 />
@@ -128,7 +128,8 @@ function CookieItem(props){
         
     }
 
-    // Cookie Edit mode
+    // #region Cookie Edit mode
+
     const [editMode, setEditMode] = useState(false)
     const [contentAnimation, setContentAnimation] = useState("")
     const [editAnimation, setEditAnimation] = useState("")
@@ -150,29 +151,56 @@ function CookieItem(props){
 
     // Making a functional react component to be able to pass down props (Component name should be capitalized otherwise it's considered a component's function.)
     function OverlayEdit(props){
+        
+        const [inputType, setInputType]= useState();
+        
+
+        useEffect(()=>{
+            switch (props.type) {
+                case "text":
+                    setInputType(<textarea defaultValue={props.value}/>)
+                    break;
+                case "date":
+                    let date = new Date(props.value).toLocaleDateString('en-CA')
+                    console.log(date)
+                    setInputType(<input type="date" defaultValue={date} max={new Date().toLocaleDateString('en-CA')} style={{fontSize:"1.5rem"}}/>)
+                    break;
+                case "select":
+                    setInputType(<select defaultValue={props.value}></select>) //TODO: Implement the design for the select (Default value should be from prop.value)
+                    break;
+                default:
+                    break;
+            }
+        },[props.type , props.value])
+        
+
         return(
                     <div className="edit-overlay-container">
                         <span>{props.name}</span>
-                        <textarea>{props.value}</textarea>
+                        {inputType}
                         <div className="cancel" onClick={()=>props.setOverlayEditPlaceholder(null)}><FontAwesomeIcon icon={faXmark} className="icon"/></div>
                         <div className="save"><FontAwesomeIcon icon={faFloppyDisk} className="icon"/></div>
                     </div>
         )
     }
     // Dynamically detects which input was clicked and pass it to the function
-    function editModeInputClick(name, value){
-        setOverlayEditPlaceholder(<OverlayEdit name={name} value={value} setOverlayEditPlaceholder={setOverlayEditPlaceholder}/>)
+    function editModeInputClick(name, value, type){
+        setOverlayEditPlaceholder(<OverlayEdit name={name} value={value} type={type} setOverlayEditPlaceholder={setOverlayEditPlaceholder}/>)
     }
+
+    // #endregion
+    
     return(
         <>
         {
             !editMode ?
+            // #region Regular mode
             <div className="cookie-container" style={{backgroundColor: backgroundColor}} onClick={()=>onCookieClick()}>
                 <div className={"img-tag-date-container " + contentAnimation}>
                     <img src={props.image} alt="Visual memories"/>
                     <div className="tag-date-container">
                         {props.tag ? <span className="tag" style={{backgroundColor: primaryColor}}>{props.tag}</span> : null}
-                        <span className="date">{props.date}</span>
+                        <span className="date">{timeAgo(props.date).toString().includes("hours") ? "Today" : timeAgo(props.date)}</span>
                     </div>
                 </div>
                 <div className={"cookie-info " + contentAnimation}>
@@ -196,7 +224,9 @@ function CookieItem(props){
                     }
                 </div>
             </div>
+            // #endregion
             :
+            // #region Edit mode
             <div className="cookie-container" style={{backgroundColor: primaryColor}}>
                 <div className={"img-tag-date-container "  + editAnimation}>
                     <div className="img-edit-container">
@@ -210,13 +240,13 @@ function CookieItem(props){
                     </div>
                 
                     <div className="tag-date-container edit">
-                        {props.tag ? <span onClick={()=>editModeInputClick("Tag",props.tag)} className="tag" style={{backgroundColor: backgroundColor}}>{props.tag}</span> : null}
-                        <span className="date">{props.date}</span>
+                        {props.tag ? <span className="tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Tag",props.tag,"text")}>{props.tag}</span> : null}
+                        <span className="date" onClick={()=>editModeInputClick("Date",props.date,"date")}>{timeAgo(props.date).toString().includes("hours") ? "Today" : timeAgo(props.date)}</span>
                     </div>
                 </div>
                 <div className={"cookie-info edit " + editAnimation}>
-                    <h1 onClick={()=>editModeInputClick("Title",props.title)}>{props.title}</h1>
-                    <p onClick={()=>editModeInputClick("Description",props.description)}>{props.description}</p>  
+                    <h1 onClick={()=>editModeInputClick("Title",props.title,"text")}>{props.title}</h1>
+                    <p onClick={()=>editModeInputClick("Description",props.description,"text")}>{props.description}</p>  
                 </div>
                 <div className={"edit-side-container "  + editAnimation}>
                     <div className="edit-cancel" style={{backgroundColor: backgroundColor}} onClick={()=>editCookie()} >
@@ -234,8 +264,8 @@ function CookieItem(props){
                 }
                 
             </div>
+            // #endregion
         }
-        
         
         </>
     )
