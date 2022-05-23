@@ -339,23 +339,17 @@ opacity: 0.5;
     border-radius: 0px 0px 0px 50%;
     box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.164);
 }
-.edit-overlay-container .save{
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    background-color: rgb(255, 255, 255);
-    border-radius: 50% 0px 0px 0px;
-    box-shadow: -1px -1px 5px rgba(0, 0, 0, 0.164);
-}
+
 .edit-overlay-container .cancel .icon{
     padding: 0.8rem;
     padding-right: 0.5rem;
     font-size: 2rem;
     color:rgb(0, 0, 0);
 }
-.edit-overlay-container .save .icon{
-    padding: 0.8rem;
-    padding-right: 0.5rem;
-    font-size: 2rem;
-    color:rgb(0, 0, 0);
+
+.date-input, .select{
+    color: black;
+}
+.date-input:focus, .select:focus{
+    outline: none;
 }

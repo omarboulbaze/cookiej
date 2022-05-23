@@ -134,6 +134,14 @@ function CookieItem(props){
     const [contentAnimation, setContentAnimation] = useState("")
     const [editAnimation, setEditAnimation] = useState("")
 
+    // Edit mode states
+    const [image, setImage] = useState(props.image)
+    const [title,setTitle] = useState(props.title)
+    const [description, setDescription] = useState(props.description)
+    const [date, setDate] = useState(props.date)
+    const [rank, setRank] = useState(props.rank)
+    const [tag, setTag] = useState(props.tag)
+    
     function editCookie(){
         if(!editMode){
             setContentAnimation("edit-content-animation")
@@ -149,47 +157,13 @@ function CookieItem(props){
     // When a user tries to modify an input while in the Edit mode
     const [overlayEditPlaceholder, setOverlayEditPlaceholder] = useState(null);
 
-    // Making a functional react component to be able to pass down props (Component name should be capitalized otherwise it's considered a component's function.)
-    function OverlayEdit(props){
-        
-        const [inputType, setInputType]= useState();
-        
-
-        useEffect(()=>{
-            switch (props.type) {
-                case "text":
-                    setInputType(<textarea defaultValue={props.value}/>)
-                    break;
-                case "date":
-                    let date = new Date(props.value).toLocaleDateString('en-CA')
-                    console.log(date)
-                    setInputType(<input type="date" defaultValue={date} max={new Date().toLocaleDateString('en-CA')} style={{fontSize:"1.5rem"}}/>)
-                    break;
-                case "select":
-                    setInputType(<select defaultValue={props.value}></select>) //TODO: Implement the design for the select (Default value should be from prop.value)
-                    break;
-                default:
-                    break;
-            }
-        },[props.type , props.value])
-        
-
-        return(
-                    <div className="edit-overlay-container">
-                        <span>{props.name}</span>
-                        {inputType}
-                        <div className="cancel" onClick={()=>props.setOverlayEditPlaceholder(null)}><FontAwesomeIcon icon={faXmark} className="icon"/></div>
-                        <div className="save"><FontAwesomeIcon icon={faFloppyDisk} className="icon"/></div>
-                    </div>
-        )
-    }
     // Dynamically detects which input was clicked and pass it to the function
     function editModeInputClick(name, value, type){
         setOverlayEditPlaceholder(<OverlayEdit name={name} value={value} type={type} setOverlayEditPlaceholder={setOverlayEditPlaceholder}/>)
     }
 
     // #endregion
-    
+
     return(
         <>
         {
@@ -230,7 +204,7 @@ function CookieItem(props){
             <div className="cookie-container" style={{backgroundColor: primaryColor}}>
                 <div className={"img-tag-date-container "  + editAnimation}>
                     <div className="img-edit-container">
-                        <img src={props.image} alt="Visual memories" className="img-edit"/>
+                        <img src={image} alt="Visual memories" className="img-edit"/>
                         <div className="icon">
                             <FontAwesomeIcon icon={faRotate}/>
                         </div>
@@ -240,19 +214,19 @@ function CookieItem(props){
                     </div>
                 
                     <div className="tag-date-container edit">
-                        {props.tag ? <span className="tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Tag",props.tag,"text")}>{props.tag}</span> : null}
-                        <span className="date" onClick={()=>editModeInputClick("Date",props.date,"date")}>{timeAgo(props.date).toString().includes("hours") ? "Today" : timeAgo(props.date)}</span>
+                        {tag ? <span className="tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Tag",tag,"text")}>{tag}</span> : null}
+                        <span className="date" onClick={()=>editModeInputClick("Date",date,"date")}>{timeAgo(date).toString().includes("hours") ? "Today" : timeAgo(date)}</span>
                     </div>
                 </div>
                 <div className={"cookie-info edit " + editAnimation}>
-                    <h1 onClick={()=>editModeInputClick("Title",props.title,"text")}>{props.title}</h1>
-                    <p onClick={()=>editModeInputClick("Description",props.description,"text")}>{props.description}</p>  
+                    <h1 onClick={()=>editModeInputClick("Title",title,"text")}>{title}</h1>
+                    <p onClick={()=>editModeInputClick("Description",description,"text")}>{description}</p>  
                 </div>
                 <div className={"edit-side-container "  + editAnimation}>
                     <div className="edit-cancel" style={{backgroundColor: backgroundColor}} onClick={()=>editCookie()} >
                         <FontAwesomeIcon icon={faXmark} className="icon" style={{color: primaryColor}}/>
                     </div>
-                    <div className="edit-tag" style={{backgroundColor: backgroundColor}} >
+                    <div className="edit-tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Rank",rank,"select")}>
                         <FontAwesomeIcon icon={faTag} className="icon" style={{color: primaryColor}}/>
                     </div>
                     <div className="edit-confirm" style={{backgroundColor: backgroundColor}} >
@@ -270,5 +244,46 @@ function CookieItem(props){
         </>
     )
 }
+
+// Making a functional react component to be able to pass down props (Component name should be capitalized otherwise it's considered a component's function.)
+function OverlayEdit(props){
+        
+    const [inputType, setInputType]= useState();
+    
+
+    useEffect(()=>{
+        switch (props.type) {
+            case "text":
+                setInputType(<textarea defaultValue={props.value}/>)
+                break;
+            case "date":
+                let date = new Date(props.value).toLocaleDateString('en-CA')
+                console.log(date)
+                setInputType(<input type="date" className="date-input" defaultValue={date} max={new Date().toLocaleDateString('en-CA')} style={{fontSize:"1.5rem"}}/>)
+                break;
+            case "select":
+                setInputType(<select className="select" style={{fontSize:"1.2rem"}} defaultValue={props.value}>
+                                <option value="bronze" className="bronze">🟫 Bronze</option>
+                                <option value="silver" className="silver">⬜️ Silver</option>
+                                <option value="gold" className="gold">🟨 Gold</option>
+                                <option value="platinum" className="platinum">🟪 Platinum</option>
+                                <option value="diamond" className="diamond">🟦 Diamond</option>
+                            </select>)
+                break;
+            default:
+                break;
+        }
+    },[props.type , props.value])
+    
+
+    return(
+                <div className="edit-overlay-container">
+                    <span>{props.name}</span>
+                    {inputType}
+                    <div className="cancel" onClick={()=>props.setOverlayEditPlaceholder(null)}><FontAwesomeIcon icon={faXmark} className="icon"/></div>
+                </div>
+    )
+}
+
 
 export default Cookies;
