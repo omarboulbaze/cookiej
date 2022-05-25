@@ -159,7 +159,8 @@ function CookieItem(props){
 
     // Dynamically detects which input was clicked and pass it to the function
     function editModeInputClick(name, value, type){
-        setOverlayEditPlaceholder(<OverlayEdit name={name} value={value} type={type} setOverlayEditPlaceholder={setOverlayEditPlaceholder}/>)
+        setOverlayEditPlaceholder(<OverlayEdit name={name} value={value} type={type} setOverlayEditPlaceholder={setOverlayEditPlaceholder}
+            setTitle={setTitle} setDescription={setDescription} setDate={setDate} setRank={setRank} setTag={setTag}/>)
     }
 
     // #endregion
@@ -214,19 +215,19 @@ function CookieItem(props){
                     </div>
                 
                     <div className="tag-date-container edit">
-                        {tag ? <span className="tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Tag",tag,"text")}>{tag}</span> : null}
+                        {tag ? <span className="tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Tag",tag,"tag")}>{tag}</span> : null}
                         <span className="date" onClick={()=>editModeInputClick("Date",date,"date")}>{timeAgo(date).toString().includes("hours") ? "Today" : timeAgo(date)}</span>
                     </div>
                 </div>
                 <div className={"cookie-info edit " + editAnimation}>
-                    <h1 onClick={()=>editModeInputClick("Title",title,"text")}>{title}</h1>
-                    <p onClick={()=>editModeInputClick("Description",description,"text")}>{description}</p>  
+                    <h1 onClick={()=>editModeInputClick("Title",title,"title")}>{title}</h1>
+                    <p onClick={()=>editModeInputClick("Description",description,"description")}>{description}</p>  
                 </div>
                 <div className={"edit-side-container "  + editAnimation}>
                     <div className="edit-cancel" style={{backgroundColor: backgroundColor}} onClick={()=>editCookie()} >
                         <FontAwesomeIcon icon={faXmark} className="icon" style={{color: primaryColor}}/>
                     </div>
-                    <div className="edit-tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Rank",rank,"select")}>
+                    <div className="edit-tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Rank",rank,"rank")}>
                         <FontAwesomeIcon icon={faTag} className="icon" style={{color: primaryColor}}/>
                     </div>
                     <div className="edit-confirm" style={{backgroundColor: backgroundColor}} >
@@ -253,16 +254,26 @@ function OverlayEdit(props){
 
     useEffect(()=>{
         switch (props.type) {
-            case "text":
-                setInputType(<textarea defaultValue={props.value}/>)
+            case "title":
+                setInputType(<textarea defaultValue={props.value} onChange={(e)=> props.setTitle(e.target.value)}/>)
+                break;
+            case "description":
+                setInputType(<textarea defaultValue={props.value} onChange={(e)=> props.setDescription(e.target.value)}/>)
+                break;
+            case "tag":
+                setInputType(<textarea defaultValue={props.value} onChange={(e)=> props.setTag(e.target.value)}/>)
                 break;
             case "date":
                 let date = new Date(props.value).toLocaleDateString('en-CA')
                 console.log(date)
-                setInputType(<input type="date" className="date-input" defaultValue={date} max={new Date().toLocaleDateString('en-CA')} style={{fontSize:"1.5rem"}}/>)
+                setInputType(<input type="date" className="date-input" defaultValue={date} max={new Date().toLocaleDateString('en-CA')} style={{fontSize:"1.5rem"}}
+                onChange={(e)=> props.setDate(e.target.value)}
+                />)
                 break;
-            case "select":
-                setInputType(<select className="select" style={{fontSize:"1.2rem"}} defaultValue={props.value}>
+            case "rank":
+                // TODO: Make the cookie background color change when changing the rank
+                // TODO: Title should never be null, add condition
+                setInputType(<select className="select" style={{fontSize:"1.2rem"}} defaultValue={props.value} onChange={(e)=> props.setRank(e.target.value)}>
                                 <option value="bronze" className="bronze">🟫 Bronze</option>
                                 <option value="silver" className="silver">⬜️ Silver</option>
                                 <option value="gold" className="gold">🟨 Gold</option>
@@ -273,7 +284,7 @@ function OverlayEdit(props){
             default:
                 break;
         }
-    },[props.type , props.value])
+    },[props])
     
 
     return(
