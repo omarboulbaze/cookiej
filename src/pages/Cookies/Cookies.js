@@ -46,42 +46,10 @@ function Cookies(){
         <div className="cookie-grouper">
 
         {cookiesData.length > 0 ?
-            cookiesData.map((c,i)=> {
-                let hue;
-                let saturation = "100%" ;
-                let saturationBg = "78%" ;
-                let lightness = "59%" ;
-                let lightnessBg = "91%" ;
-                switch (c.rank) {
-                    case "bronze":
-                        hue = 30
-                        saturation = "60%"
-                        break;
-                    case "silver":
-                        hue = 0
-                        saturation = "0%"
-                        lightness = "100%"
-                        saturationBg = "0%"
-                        lightnessBg = "92%"
-                        break;
-                    case "gold":
-                        hue = 50
-                        break;
-                    case "platinum":
-                        hue = 300
-                        break;
-                    case "diamond":
-                        hue = 200
-                        break;
-                    default:
-                        break;
-                }
-
+            cookiesData.map( c => {
             return <CookieItem  key={c._id} id={c._id} image={c.image ? apiUrl+'/images/'+ c.image : cookieLogoDetailed} title={c.title} description={c.description} 
-                                date={c.date} rank={c.rank} tag={c.tag} hue={hue} 
-                                lightness={lightness} lightnessBg={lightnessBg} saturation={saturation} saturationBg={saturationBg} cookiesData={cookiesData} setCookiesData={setCookiesData}
-                                setAlert={setAlert} alert={alert}
-                                />
+                                date={c.date} rank={c.rank} tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}
+                    />
             })
             :
             <div className="empty-container" style={{maxWidth:"640px", margin:"auto"}}>
@@ -98,8 +66,46 @@ function Cookies(){
 
 function CookieItem(props){
 
-    const primaryColor = `hsl(${props.hue}, ${props.saturation}, ${props.lightness})`
-    const backgroundColor = `hsl(${props.hue}, ${props.saturationBg}, ${props.lightnessBg})`
+    // Edit mode states
+    const [image, setImage] = useState(props.image)
+    const [title,setTitle] = useState(props.title)
+    const [description, setDescription] = useState(props.description)
+    const [date, setDate] = useState(props.date)
+    const [rank, setRank] = useState(props.rank)
+    const [tag, setTag] = useState(props.tag)
+    
+    // Dynamically setting the cookie colors
+    let hue;
+    let saturation = "100%" ;
+    let saturationBg = "78%" ;
+    let lightness = "59%" ;
+    let lightnessBg = "91%" ;
+    switch (rank) {
+        case "bronze":
+            hue = 30
+            saturation = "60%"
+            break;
+        case "silver":
+            hue = 0
+            saturation = "0%"
+            lightness = "100%"
+            saturationBg = "0%"
+            lightnessBg = "92%"
+            break;
+        case "gold":
+            hue = 50
+            break;
+        case "platinum":
+            hue = 300
+            break;
+        case "diamond":
+            hue = 200
+            break;
+        default:
+            break;
+    }
+    const primaryColor = `hsl(${hue}, ${saturation}, ${lightness})`
+    const backgroundColor = `hsl(${hue}, ${saturationBg}, ${lightnessBg})`
 
     // OnClick show the side button with an option to edit or delete the cookie
     const [sideExpanded, setSideExpanded] = useState(false);
@@ -134,23 +140,31 @@ function CookieItem(props){
     const [contentAnimation, setContentAnimation] = useState("")
     const [editAnimation, setEditAnimation] = useState("")
 
-    // Edit mode states
-    const [image, setImage] = useState(props.image)
-    const [title,setTitle] = useState(props.title)
-    const [description, setDescription] = useState(props.description)
-    const [date, setDate] = useState(props.date)
-    const [rank, setRank] = useState(props.rank)
-    const [tag, setTag] = useState(props.tag)
-    
+
     function editCookie(){
         if(!editMode){
             setContentAnimation("edit-content-animation")
             setEditAnimation("edit-mode-animation")
             setTimeout(()=> {setEditMode(true)},200)
         }else{
-            setContentAnimation("")
-            setEditAnimation("")
-            setEditMode(false)
+            if(title !== props.title || description !== props.description || date !== props.date || rank !== props.rank || tag !== props.tag){
+                if(window.confirm("The cookie data has been modified, your changes will be discarded. Are you sure you want to discard the changes ?")){
+                    setContentAnimation("")
+                    setEditAnimation("")
+                    setEditMode(false)
+                    // Discarding all changes
+                    setTitle(props.title)
+                    setDescription(props.description)
+                    setDate(props.date)
+                    setRank(props.rank)
+                    setTag(props.tag)
+                }
+            }else{
+                setContentAnimation("")
+                setEditAnimation("")
+                setEditMode(false)
+            }
+            
         }
     }
 
@@ -271,7 +285,6 @@ function OverlayEdit(props){
                 />)
                 break;
             case "rank":
-                // TODO: Make the cookie background color change when changing the rank
                 // TODO: Title should never be null, add condition
                 setInputType(<select className="select" style={{fontSize:"1.2rem"}} defaultValue={props.value} onChange={(e)=> props.setRank(e.target.value)}>
                                 <option value="bronze" className="bronze">🟫 Bronze</option>
