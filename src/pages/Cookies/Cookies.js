@@ -13,7 +13,7 @@ import Topbar from "../Components/Topbar/Topbar";
 import Alert from "../Components/Alert/Alert";
 import {timeAgo} from '../Add/Add';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTag } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 //  Importing axios
 const axios = require('axios');
@@ -74,7 +74,7 @@ function CookieItem(props){
     const [rank, setRank] = useState(props.rank)
     const [tag, setTag] = useState(props.tag)
     
-    // Dynamically setting the cookie colors
+    // #region Dynamically setting the cookie colors
     let hue;
     let saturation = "100%" ;
     let saturationBg = "78%" ;
@@ -90,7 +90,7 @@ function CookieItem(props){
             saturation = "0%"
             lightness = "100%"
             saturationBg = "0%"
-            lightnessBg = "92%"
+            lightnessBg = "90%"
             break;
         case "gold":
             hue = 50
@@ -106,6 +106,7 @@ function CookieItem(props){
     }
     const primaryColor = `hsl(${hue}, ${saturation}, ${lightness})`
     const backgroundColor = `hsl(${hue}, ${saturationBg}, ${lightnessBg})`
+    // #endregion
 
     // OnClick show the side button with an option to edit or delete the cookie
     const [sideExpanded, setSideExpanded] = useState(false);
@@ -141,6 +142,7 @@ function CookieItem(props){
     const [editAnimation, setEditAnimation] = useState("")
 
 
+    // Enabling edit mode
     function editCookie(){
         if(!editMode){
             setContentAnimation("edit-content-animation")
@@ -188,7 +190,10 @@ function CookieItem(props){
                 <div className={"img-tag-date-container " + contentAnimation}>
                     <img src={props.image} alt="Visual memories"/>
                     <div className="tag-date-container">
-                        {props.tag ? <span className="tag" style={{backgroundColor: primaryColor}}>{props.tag}</span> : null}
+                        {props.tag ? <span className="tag" style={{backgroundColor: primaryColor}}>{props.tag}</span>
+                        :
+                        <span className="tag" style={{visibility:"hidden"}}><FontAwesomeIcon icon={faPlus}/></span>
+                        }
                         <span className="date">{timeAgo(props.date).toString().includes("hours") ? "Today" : timeAgo(props.date)}</span>
                     </div>
                 </div>
@@ -229,20 +234,27 @@ function CookieItem(props){
                     </div>
                 
                     <div className="tag-date-container edit">
-                        {tag ? <span className="tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Tag",tag,"tag")}>{tag}</span> : null}
+                        {tag ? <span className="tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Tag",tag,"tag")}>{tag}</span>
+                         :
+                         <span className="tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Tag",tag,"tag")}><FontAwesomeIcon icon={faPlus}/></span>
+                         }
                         <span className="date" onClick={()=>editModeInputClick("Date",date,"date")}>{timeAgo(date).toString().includes("hours") ? "Today" : timeAgo(date)}</span>
                     </div>
                 </div>
                 <div className={"cookie-info edit " + editAnimation}>
                     <h1 onClick={()=>editModeInputClick("Title",title,"title")}>{title}</h1>
-                    <p onClick={()=>editModeInputClick("Description",description,"description")}>{description}</p>  
+                    {
+                        description ?  <p onClick={()=>editModeInputClick("Description",description,"description")}>{description}</p>
+                        :
+                        <p onClick={()=>editModeInputClick("Description",description,"description")} style={{fontSize:"1.5rem", textAlign:"center", padding:"2rem"}}><FontAwesomeIcon icon={faPlus}/></p> 
+                    }
                 </div>
                 <div className={"edit-side-container "  + editAnimation}>
                     <div className="edit-cancel" style={{backgroundColor: backgroundColor}} onClick={()=>editCookie()} >
                         <FontAwesomeIcon icon={faXmark} className="icon" style={{color: primaryColor}}/>
                     </div>
-                    <div className="edit-tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Rank",rank,"rank")}>
-                        <FontAwesomeIcon icon={faTag} className="icon" style={{color: primaryColor}}/>
+                    <div className="edit-rank" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Rank",rank,"rank")}>
+                        <FontAwesomeIcon icon={faTrophy} className="icon" style={{color: primaryColor}}/>
                     </div>
                     <div className="edit-confirm" style={{backgroundColor: backgroundColor}} >
                         <FontAwesomeIcon icon={faFloppyDisk} className="icon" style={{color: primaryColor}}/>
@@ -264,12 +276,30 @@ function CookieItem(props){
 function OverlayEdit(props){
         
     const [inputType, setInputType]= useState();
-    
+
 
     useEffect(()=>{
+
+    // Checking if the title is not null
+    function checkTitle(value){
+        if(value !== ""){
+            props.setTitle(value)
+        }
+    }
+
+    // Checking if the date is in the past. Maximum date for a cookie is today.
+    function checkDate(value){
+        if(value > new Date().toLocaleDateString('en-CA')){
+            alert("The cookie date cannot be in the future.")
+            props.setOverlayEditPlaceholder(null)
+        }else{
+            props.setDate(value)
+        }
+    }
+
         switch (props.type) {
             case "title":
-                setInputType(<textarea defaultValue={props.value} onChange={(e)=> props.setTitle(e.target.value)}/>)
+                setInputType(<textarea defaultValue={props.value} onChange={(e)=> checkTitle(e.target.value)}/>)
                 break;
             case "description":
                 setInputType(<textarea defaultValue={props.value} onChange={(e)=> props.setDescription(e.target.value)}/>)
@@ -279,13 +309,11 @@ function OverlayEdit(props){
                 break;
             case "date":
                 let date = new Date(props.value).toLocaleDateString('en-CA')
-                console.log(date)
                 setInputType(<input type="date" className="date-input" defaultValue={date} max={new Date().toLocaleDateString('en-CA')} style={{fontSize:"1.5rem"}}
-                onChange={(e)=> props.setDate(e.target.value)}
+                onChange={(e)=> checkDate(e.target.value)}
                 />)
                 break;
             case "rank":
-                // TODO: Title should never be null, add condition
                 setInputType(<select className="select" style={{fontSize:"1.2rem"}} defaultValue={props.value} onChange={(e)=> props.setRank(e.target.value)}>
                                 <option value="bronze" className="bronze">🟫 Bronze</option>
                                 <option value="silver" className="silver">⬜️ Silver</option>

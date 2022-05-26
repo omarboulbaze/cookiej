@@ -7,7 +7,7 @@ import Alert from "../Components/Alert/Alert";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
-import { faAngleDown, faAngleUp, faCamera, faCheckCircle, faPlus, faRankingStar, faTag, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleUp, faCamera, faCheckCircle, faPlus, faTag, faTrash, faTrophy } from "@fortawesome/free-solid-svg-icons";
 
 //CSS
 import "./Add.css";
@@ -38,10 +38,11 @@ const getDuration = (timeAgoInSeconds) => {
 };
 // Exporting this function so it can be imported and used in other file like Cookies.js
 export const timeAgo = (date) => {
-    const timeAgoInSeconds = Math.floor((new Date() - new Date(date)) / 1000);
-    const {interval, epoch} = getDuration(timeAgoInSeconds);
-    const suffix = interval === 1 ? '' : 's';
-    return `${interval} ${epoch}${suffix} ago`;
+    if(!date) return "Long time ago" // Avoiding an error when the date entered is undefined
+        const timeAgoInSeconds = Math.floor((new Date() - new Date(date)) / 1000);
+        const {interval, epoch} = getDuration(timeAgoInSeconds);
+        const suffix = interval === 1 ? '' : 's';
+        return `${interval} ${epoch}${suffix} ago`;
 };
 // #endregion
 
@@ -210,7 +211,7 @@ function Add(){
                 {/* Rank input */}
                 <div className="input-container">
                     <div>
-                        <FontAwesomeIcon icon={faRankingStar} className="icon"/>
+                        <FontAwesomeIcon icon={faTrophy} className="icon"/>
                         <label className="label">Rank</label>
                     </div>
                     <select className="select" style={{fontSize:"1rem"}} value={rank} onChange={e => setRank(e.target.value)}>
