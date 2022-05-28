@@ -106,6 +106,7 @@ function CookieItem(props){
     }
     const primaryColor = `hsl(${hue}, ${saturation}, ${lightness})`
     const backgroundColor = `hsl(${hue}, ${saturationBg}, ${lightnessBg})`
+    const dateColor = `hsl(${hue}, ${saturation}, 80%)`
     // #endregion
 
     // OnClick show the side button with an option to edit or delete the cookie
@@ -238,7 +239,7 @@ function CookieItem(props){
                          :
                          <span className="tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Tag",tag,"tag")}><FontAwesomeIcon icon={faPlus}/></span>
                          }
-                        <span className="date" onClick={()=>editModeInputClick("Date",date,"date")}>{timeAgo(date).toString().includes("hours") ? "Today" : timeAgo(date)}</span>
+                        <span className="date" style={{backgroundColor: dateColor}} onClick={()=>editModeInputClick("Date",date,"date")}>{timeAgo(date).toString().includes("hours") ? "Today" : timeAgo(date)}</span>
                     </div>
                 </div>
                 <div className={"cookie-info edit " + editAnimation}>
