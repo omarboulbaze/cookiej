@@ -13,7 +13,7 @@ import Topbar from "../Components/Topbar/Topbar";
 import Alert from "../Components/Alert/Alert";
 import {timeAgo} from '../Add/Add';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 
 //  Importing axios
 const axios = require('axios');
@@ -78,7 +78,7 @@ function CookieItem(props){
     let hue;
     let saturation = "100%" ;
     let saturationBg = "78%" ;
-    let lightness = "59%" ;
+    let lightness = "80%" ;
     let lightnessBg = "91%" ;
     switch (rank) {
         case "bronze":
@@ -90,23 +90,26 @@ function CookieItem(props){
             saturation = "0%"
             lightness = "100%"
             saturationBg = "0%"
-            lightnessBg = "90%"
+            lightnessBg = "93%"
             break;
         case "gold":
             hue = 50
             break;
         case "platinum":
             hue = 300
+            // lightness = "77%"
             break;
         case "diamond":
             hue = 200
+            // lightness = "67%"
             break;
         default:
             break;
     }
     const primaryColor = `hsl(${hue}, ${saturation}, ${lightness})`
     const backgroundColor = `hsl(${hue}, ${saturationBg}, ${lightnessBg})`
-    const dateColor = `hsl(${hue}, ${saturation}, 80%)`
+    const dateColorEditMode = `hsl(${hue}, ${saturation}, 96%)`
+    const buttonColorEditMode = `hsl(${hue}, ${saturation}, 45%, 0.5)`
     // #endregion
 
     // OnClick show the side button with an option to edit or delete the cookie
@@ -180,6 +183,29 @@ function CookieItem(props){
             setTitle={setTitle} setDescription={setDescription} setDate={setDate} setRank={setRank} setTag={setTag}/>)
     }
 
+    function saveEditChanges(){
+        console.table({image:image, title:title, description:description, date:date, rank:rank, tag:tag})
+
+        axios.put(`${apiUrl}/update/${props.id}`,{
+            title: title,
+            description: description,
+            date: date,
+            rank: rank,
+            tag: tag
+        })
+        .then(()=>{
+            props.setAlert(null) // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
+            setTimeout(()=> { props.setAlert(<Alert text="Your changes have been successfully saved!" hue="120" icon={faCheckCircle}/>)},100)
+            setContentAnimation("")
+            setEditAnimation("")
+            setEditMode(false)
+        })
+        .catch( error => {
+            props.setAlert(null) // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
+            props.setAlert(<Alert boldText="Oops," text=" something went wrong. Please try again later." hue="0" icon={faXmarkCircle}/>);
+            console.log(error);
+          });
+    }
     // #endregion
 
     return(
@@ -189,18 +215,18 @@ function CookieItem(props){
             // #region Regular mode
             <div className="cookie-container" style={{backgroundColor: backgroundColor}} onClick={()=>onCookieClick()}>
                 <div className={"img-tag-date-container " + contentAnimation}>
-                    <img src={props.image} alt="Visual memories"/>
+                    <img src={image} alt="Visual memories"/>
                     <div className="tag-date-container">
-                        {props.tag ? <span className="tag" style={{backgroundColor: primaryColor}}>{props.tag}</span>
+                        {tag ? <span className="tag" style={{backgroundColor: primaryColor}}>{tag}</span>
                         :
                         <span className="tag" style={{visibility:"hidden"}}><FontAwesomeIcon icon={faPlus}/></span>
                         }
-                        <span className="date">{timeAgo(props.date).toString().includes("hours") ? "Today" : timeAgo(props.date)}</span>
+                        <span className="date">{timeAgo(date).toString().includes("hours") ? "Today" : timeAgo(date)}</span>
                     </div>
                 </div>
                 <div className={"cookie-info " + contentAnimation}>
-                    <h1>{props.title}</h1>
-                    <p>{props.description}</p>  
+                    <h1>{title}</h1>
+                    <p>{description}</p>  
                 </div>
                 <div className={animationClass + " " + contentAnimation} style={{backgroundColor: primaryColor}}>
                     {
@@ -239,7 +265,7 @@ function CookieItem(props){
                          :
                          <span className="tag" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Tag",tag,"tag")}><FontAwesomeIcon icon={faPlus}/></span>
                          }
-                        <span className="date" style={{backgroundColor: dateColor}} onClick={()=>editModeInputClick("Date",date,"date")}>{timeAgo(date).toString().includes("hours") ? "Today" : timeAgo(date)}</span>
+                        <span className="date" style={{backgroundColor: dateColorEditMode}} onClick={()=>editModeInputClick("Date",date,"date")}>{timeAgo(date).toString().includes("hours") ? "Today" : timeAgo(date)}</span>
                     </div>
                 </div>
                 <div className={"cookie-info edit " + editAnimation}>
@@ -252,13 +278,13 @@ function CookieItem(props){
                 </div>
                 <div className={"edit-side-container "  + editAnimation}>
                     <div className="edit-cancel" style={{backgroundColor: backgroundColor}} onClick={()=>editCookie()} >
-                        <FontAwesomeIcon icon={faXmark} className="icon" style={{color: primaryColor}}/>
+                        <FontAwesomeIcon icon={faXmark} className="icon" style={{color: buttonColorEditMode}}/>
                     </div>
                     <div className="edit-rank" style={{backgroundColor: backgroundColor}} onClick={()=>editModeInputClick("Rank",rank,"rank")}>
-                        <FontAwesomeIcon icon={faTrophy} className="icon" style={{color: primaryColor}}/>
+                        <FontAwesomeIcon icon={faTrophy} className="icon" style={{color: buttonColorEditMode}}/>
                     </div>
-                    <div className="edit-confirm" style={{backgroundColor: backgroundColor}} >
-                        <FontAwesomeIcon icon={faFloppyDisk} className="icon" style={{color: primaryColor}}/>
+                    <div className="edit-confirm" style={{backgroundColor: backgroundColor}} onClick={()=> saveEditChanges()} >
+                        <FontAwesomeIcon icon={faFloppyDisk} className="icon" style={{color: buttonColorEditMode}}/>
                     </div>
                 </div>
                 {
