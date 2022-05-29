@@ -184,7 +184,6 @@ function CookieItem(props){
     }
 
     function saveEditChanges(){
-        console.table({image:image, title:title, description:description, date:date, rank:rank, tag:tag})
 
         axios.put(`${apiUrl}/update/${props.id}`,{
             title: title,
