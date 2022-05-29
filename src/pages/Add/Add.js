@@ -145,7 +145,6 @@ function Add(){
         .then(()=>{
             setAlert(<Alert boldText="Congratulations!" text=" Your cookie has been added to your cookie jar." hue="120" icon={faCheckCircle}/>);
             setImage(null);
-            setImageUploaded(null);
             setImageUploaded(false);
             setTitle("");
             setDescription("");
@@ -169,7 +168,7 @@ function Add(){
 
     function deleteImage(){
         if(window.confirm("Delete the image ?")){
-            setImageUploaded(null);
+            setImageUploaded(false);
             setImage(null);
         }
     }

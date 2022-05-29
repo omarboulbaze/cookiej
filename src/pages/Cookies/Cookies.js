@@ -1,5 +1,5 @@
 // REACT
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // CSS
 import "./Cookies.css"
@@ -47,7 +47,7 @@ function Cookies(){
 
         {cookiesData.length > 0 ?
             cookiesData.map( c => {
-            return <CookieItem  key={c._id} id={c._id} image={c.image ? apiUrl+'/images/'+ c.image : cookieLogoDetailed} title={c.title} description={c.description} 
+            return <CookieItem  key={c._id} id={c._id} image={c.image ? apiUrl+'/images/'+ c.image : null} title={c.title} description={c.description} 
                                 date={c.date} rank={c.rank} tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}
                     />
             })
@@ -153,7 +153,7 @@ function CookieItem(props){
             setEditAnimation("edit-mode-animation")
             setTimeout(()=> {setEditMode(true)},200)
         }else{
-            if(title !== props.title || description !== props.description || date !== props.date || rank !== props.rank || tag !== props.tag){
+            if(title !== props.title || description !== props.description || date !== props.date || rank !== props.rank || tag !== props.tag || image !== props.image){
                 if(window.confirm("The cookie data has been modified, your changes will be discarded. Are you sure you want to discard the changes ?")){
                     setContentAnimation("")
                     setEditAnimation("")
@@ -164,6 +164,8 @@ function CookieItem(props){
                     setDate(props.date)
                     setRank(props.rank)
                     setTag(props.tag)
+                    setImage(props.image)
+                    setImgData(null)
                 }
             }else{
                 setContentAnimation("")
@@ -185,13 +187,15 @@ function CookieItem(props){
 
     function saveEditChanges(){
 
+        console.table({image:image, title:title, description:description, date:date, rank:rank, tag:tag})
         axios.put(`${apiUrl}/update/${props.id}`,{
+            image: image,
             title: title,
             description: description,
             date: date,
             rank: rank,
             tag: tag
-        })
+        },{headers: {'Content-Type': 'multipart/form-data'}})
         .then(()=>{
             props.setAlert(null) // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
             setTimeout(()=> { props.setAlert(<Alert text="Your changes have been successfully saved!" hue="120" icon={faCheckCircle}/>)},100)
@@ -205,6 +209,31 @@ function CookieItem(props){
             console.log(error);
           });
     }
+     // Creating the reference of the <input/> in html.
+     const imageInputFile = useRef(null);
+     function replaceImage(){   
+             imageInputFile.current.click();
+     }
+     // When user uploads an image
+    const [imgData, setImgData] = useState(null);
+    function onImageUpload(e){
+        if (e.target.files[0]) {
+            setImage(e.target.files[0]);
+            const reader = new FileReader(); //Reading the image from user input
+            reader.addEventListener("load", () => {
+              setImgData(reader.result);
+            });
+            reader.readAsDataURL(e.target.files[0]);
+          }
+    }
+    function deleteImage(){
+        setImage(null)
+        setImgData(null)
+    }
+
+    console.log("image",image)
+    console.log("imgData",imgData)
+    console.log("props.image",props.image)
     // #endregion
 
     return(
@@ -214,7 +243,7 @@ function CookieItem(props){
             // #region Regular mode
             <div className="cookie-container" style={{backgroundColor: backgroundColor}} onClick={()=>onCookieClick()}>
                 <div className={"img-tag-date-container " + contentAnimation}>
-                    <img src={image} alt="Visual memories"/>
+                    <img src={imgData ? imgData : (image ? image : cookieLogoDetailed)} alt="Visual memories"/>
                     <div className="tag-date-container">
                         {tag ? <span className="tag" style={{backgroundColor: primaryColor}}>{tag}</span>
                         :
@@ -250,11 +279,13 @@ function CookieItem(props){
             <div className="cookie-container" style={{backgroundColor: primaryColor}}>
                 <div className={"img-tag-date-container "  + editAnimation}>
                     <div className="img-edit-container">
-                        <img src={image} alt="Visual memories" className="img-edit"/>
-                        <div className="icon">
+                        <img src={imgData ? imgData : (image ? image : cookieLogoDetailed)} alt="Visual memories" className="img-edit"/>
+                        <div className="icon" onClick={()=> replaceImage()}>
                             <FontAwesomeIcon icon={faRotate}/>
+                            {/* Input is hidden. Only the label is visible which is linked to the input tag. */}
+                            <input ref={imageInputFile} accept="image/*" type="file" style={{display:"none"}} onChange={ e => onImageUpload(e)}/>
                         </div>
-                        <div className="icon">
+                        <div className="icon" onClick={()=> deleteImage()}>
                             <FontAwesomeIcon icon={faTrashAlt} />
                         </div>
                     </div>

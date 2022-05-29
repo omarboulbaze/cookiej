@@ -102,16 +102,18 @@ app.delete('/api/delete/:id', (req, res) => {
 });
 
 // Update a cookie by ID
-app.put('/api/update/:id', (req,res) => {
+app.put('/api/update/:id', upload.single('image'), (req,res) => {
 
   Cookie.updateOne({_id:req.params.id},
     {$set:{
+      image: req.file ? req.file.filename : null,
       title: req.body.title,
       description: req.body.description,
       tag: req.body.tag,
       date: req.body.date,
       rank: req.body.rank
-    }}).exec((err)=>{
+    }})
+    .exec((err)=>{
     if(err) return res.status(500).json({code: 404, message: 'There was an error updating the cookie', error: err})
     res.status(200).json({code: 200, message: 'Cookie updated'})
     console.log(req.body)
