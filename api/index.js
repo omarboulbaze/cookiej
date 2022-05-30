@@ -17,24 +17,24 @@ app.use(cors());
 // Core node module
 const path = require('path');
 
+// File system
+const fs = require('fs');
+
 // #endregion Imports
 
-// Multer
+// #region Multer
 const multer = require("multer");
 const storage = multer.diskStorage({
-  destination: (req, file, cb)=>{
-    cb(null,'images/')
-  },
-  filename: (req, file, cb)=>{
-    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-  }
+    destination: (req, file, cb)=>{ cb(null,'images/') },
+    filename: (req, file, cb)=>{ cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));}
 });
 const upload = multer({storage: storage});
+// #endregion
 
 // Establishing a database connection
 const mongoose = require('mongoose');
-mongoose
-  .connect(process.env.MONGO_URL, {
+
+mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -70,6 +70,49 @@ app.post('/api/addCookie', upload.single('image'),(req, res)=> {
     }
 );
 
+// Deleting a cookie by ID
+app.delete('/api/delete/:id', (req, res) => {
+
+  Cookie.findOneAndDelete({_id: req.params.id}).exec((err, cookie) => {
+      if(err) return res.status(500).json({code: 500, message: 'There was an error deleting the cookie', error: err})
+      res.status(200).json({code: 200, message: 'Cookie deleted', deletedCookie: cookie})
+      const deleteImage = `./images/${cookie.image}`
+      if (fs.existsSync(deleteImage)) {
+        fs.unlink(deleteImage, (err) => {
+          if (err) {
+              console.log(err);
+          }
+        })
+      }
+    });
+  
+});
+
+// Update a cookie by ID
+app.put('/api/update/:id', upload.single('image'), (req,res) => {
+
+  Cookie.findOneAndUpdate({_id:req.params.id},
+    {$set:{
+      image: req.file ? req.file.filename : null,
+      title: req.body.title,
+      description: req.body.description,
+      tag: req.body.tag,
+      date: req.body.date,
+      rank: req.body.rank
+    }},
+    (err, cookie)=>{
+      if(err) return res.status(500).json({code: 404, message: 'There was an error updating the cookie', error: err})
+      res.status(200).json({code: 200, message: 'Cookie updated'})
+      const deleteImage = `./images/${cookie.image}`
+      if (fs.existsSync(deleteImage)) {
+        fs.unlink(deleteImage, (err) => {
+          if (err) {
+              console.log(err);
+          }
+        })
+      }
+    })
+});
 
 
 // Returning all reviews that exists in the database.
@@ -80,10 +123,9 @@ app.get('/api/', (req,res)=> {
     res.status(500).send();
     } else {
         res.status(200).json(data);
-}})
+  }})
 
-}
-);
+});
 
 // Get image
 app.get('/api/images/:fileName', (req, res) => {
@@ -91,35 +133,7 @@ app.get('/api/images/:fileName', (req, res) => {
   res.sendFile(filePath)
 });
 
-// Deleting a cookie by ID
-app.delete('/api/delete/:id', (req, res) => {
 
-  Cookie.findOneAndDelete({_id: req.params.id}).exec((err, cookie) => {
-      if(err) return res.status(500).json({code: 500, message: 'There was an error deleting the cookie', error: err})
-      res.status(200).json({code: 200, message: 'Cookie deleted', deletedCookie: cookie})
-    });
-  
-});
-
-// Update a cookie by ID
-app.put('/api/update/:id', upload.single('image'), (req,res) => {
-
-  Cookie.updateOne({_id:req.params.id},
-    {$set:{
-      image: req.file ? req.file.filename : null,
-      title: req.body.title,
-      description: req.body.description,
-      tag: req.body.tag,
-      date: req.body.date,
-      rank: req.body.rank
-    }})
-    .exec((err)=>{
-    if(err) return res.status(500).json({code: 404, message: 'There was an error updating the cookie', error: err})
-    res.status(200).json({code: 200, message: 'Cookie updated'})
-    console.log(req.body)
-  })
-
-});
 
 // Setting up the API on the port
 const PORT = process.env.PORT || 8801;

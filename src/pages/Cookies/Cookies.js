@@ -186,8 +186,7 @@ function CookieItem(props){
     }
 
     function saveEditChanges(){
-
-        console.table({image:image, title:title, description:description, date:date, rank:rank, tag:tag})
+        
         axios.put(`${apiUrl}/update/${props.id}`,{
             image: image,
             title: title,
@@ -198,7 +197,7 @@ function CookieItem(props){
         },{headers: {'Content-Type': 'multipart/form-data'}})
         .then(()=>{
             props.setAlert(null) // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
-            setTimeout(()=> { props.setAlert(<Alert text="Your changes have been successfully saved!" hue="120" icon={faCheckCircle}/>)},100)
+            setTimeout(()=> { props.setAlert(<Alert text="Your changes have been successfully saved." hue="120" icon={faCheckCircle}/>)},100)
             setContentAnimation("")
             setEditAnimation("")
             setEditMode(false)
