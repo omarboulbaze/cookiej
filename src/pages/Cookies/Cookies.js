@@ -47,7 +47,7 @@ function Cookies(){
 
         {cookiesData.length > 0 ?
             cookiesData.map( c => {
-            return <CookieItem  key={c._id} id={c._id} image={c.image ? apiUrl+'/images/'+ c.image : null} title={c.title} description={c.description} 
+            return <CookieItem  key={c._id} id={c._id} image={c.image} title={c.title} description={c.description} 
                                 date={c.date} rank={c.rank} tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}
                     />
             })
@@ -186,7 +186,7 @@ function CookieItem(props){
     }
 
     function saveEditChanges(){
-        
+       
         axios.put(`${apiUrl}/update/${props.id}`,{
             image: image,
             title: title,
@@ -230,11 +230,12 @@ function CookieItem(props){
         setImgData(null)
     }
 
-    console.log("image",image)
-    console.log("imgData",imgData)
-    console.log("props.image",props.image)
     // #endregion
 
+    console.log("IMAGE PROPS",props.image) 
+    console.log("IMAGE STATE",image) 
+    console.log("IMAGE DATA",imgData) 
+    
     return(
         <>
         {
@@ -242,7 +243,7 @@ function CookieItem(props){
             // #region Regular mode
             <div className="cookie-container" style={{backgroundColor: backgroundColor}} onClick={()=>onCookieClick()}>
                 <div className={"img-tag-date-container " + contentAnimation}>
-                    <img src={imgData ? imgData : (image ? image : cookieLogoDetailed)} alt="Visual memories"/>
+                    <img src={imgData ? imgData : (image ? apiUrl+'/images/'+ image : cookieLogoDetailed)} alt="Visual memories"/>
                     <div className="tag-date-container">
                         {tag ? <span className="tag" style={{backgroundColor: primaryColor}}>{tag}</span>
                         :
@@ -278,7 +279,7 @@ function CookieItem(props){
             <div className="cookie-container" style={{backgroundColor: primaryColor}}>
                 <div className={"img-tag-date-container "  + editAnimation}>
                     <div className="img-edit-container">
-                        <img src={imgData ? imgData : (image ? image : cookieLogoDetailed)} alt="Visual memories" className="img-edit"/>
+                        <img src={imgData ? imgData : (image ? apiUrl+'/images/'+ image : cookieLogoDetailed)} alt="Visual memories" className="img-edit"/>
                         <div className="icon" onClick={()=> replaceImage()}>
                             <FontAwesomeIcon icon={faRotate}/>
                             {/* Input is hidden. Only the label is visible which is linked to the input tag. */}

@@ -49,8 +49,7 @@ const Cookie = require('./models/cookie');
 // Adding a cookie to the database.
 app.post('/api/addCookie', upload.single('image'),(req, res)=> {
 
-    console.log(req.file);
-    console.log(req.body);
+    // console.log(req.file);
 
     const cookie = new Cookie({
         _id: new mongoose.Types.ObjectId(),
@@ -63,8 +62,9 @@ app.post('/api/addCookie', upload.single('image'),(req, res)=> {
       });
     
     cookie.save( (err,data)=> {
-        if(err) return res.status(500).json(err);           
-        res.status(201).json(data);
+              if(err) return res.status(500).json(err);           
+              res.status(201).json(data);
+              // console.log(data);
             }
         );
     }
@@ -78,11 +78,7 @@ app.delete('/api/delete/:id', (req, res) => {
       res.status(200).json({code: 200, message: 'Cookie deleted', deletedCookie: cookie})
       const deleteImage = `./images/${cookie.image}`
       if (fs.existsSync(deleteImage)) {
-        fs.unlink(deleteImage, (err) => {
-          if (err) {
-              console.log(err);
-          }
-        })
+        fs.unlink(deleteImage, (err) => { if (err) console.log(err) })
       }
     });
   
@@ -93,7 +89,7 @@ app.put('/api/update/:id', upload.single('image'), (req,res) => {
 
   Cookie.findOneAndUpdate({_id:req.params.id},
     {$set:{
-      image: req.file ? req.file.filename : null,
+      image: req.file ? req.file.filename : (req.body.image ? req.body.image : null),
       title: req.body.title,
       description: req.body.description,
       tag: req.body.tag,
@@ -103,14 +99,15 @@ app.put('/api/update/:id', upload.single('image'), (req,res) => {
     (err, cookie)=>{
       if(err) return res.status(500).json({code: 404, message: 'There was an error updating the cookie', error: err})
       res.status(200).json({code: 200, message: 'Cookie updated'})
-      const deleteImage = `./images/${cookie.image}`
-      if (fs.existsSync(deleteImage)) {
-        fs.unlink(deleteImage, (err) => {
-          if (err) {
-              console.log(err);
-          }
-        })
+      // If the user uploads an image with the request, update it and delete the old image associated with the cookie 
+      // OR if the cookie image is null, check if the cookie image had an image and delete it. (Optimizing storage)
+      if(req.file || !req.body.image){ 
+        const deleteImage = `./images/${cookie.image}`
+        if (fs.existsSync(deleteImage)) {
+          fs.unlink(deleteImage, (err) => { if (err) console.log(err) })
+        }
       }
+      
     })
 });
 
