@@ -13,7 +13,7 @@ import Topbar from "../Components/Topbar/Topbar";
 import Alert from "../Components/Alert/Alert";
 import {timeAgo} from '../Add/Add';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus, faXmarkCircle, faMagnifyingGlass, faArrowUpAZ} from "@fortawesome/free-solid-svg-icons";
 
 //  Importing axios
 const axios = require('axios');
@@ -39,18 +39,41 @@ function Cookies(){
     // Alert management
     const [alert, setAlert] = useState(null);
 
+    // Search
+    const [searchText, setSearchText] = useState("");
+
     return(
         <>
         {alert}
         <Topbar text="My Cookies"/>
+        { cookiesData.length > 1 ?
+        <div className="toolbar-container">
+            <div className="toolbar">
+            <div className="search">
+                <FontAwesomeIcon className="icon" icon={faMagnifyingGlass}/>
+                <input type="text" placeholder={`Search ${cookiesData.length} cookies...`} value={searchText} onChange={(e)=> setSearchText(e.target.value)}/>
+            </div>
+            <FontAwesomeIcon className="sort-icon" icon={faArrowUpAZ}/>
+            </div>
+        </div>
+        :
+        null
+        }
+        
+        
         <div className="cookie-grouper">
 
         {cookiesData.length > 0 ?
             cookiesData.map( c => {
-            return <CookieItem  key={c._id} id={c._id} image={c.image} title={c.title} description={c.description} 
-                                date={c.date} rank={c.rank} tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}
-                    />
+                if(c.title.toLowerCase().includes(searchText.toLowerCase())  || c.description.toLowerCase().includes(searchText.toLowerCase())){
+                    return <CookieItem  key={c._id} id={c._id} image={c.image} title={c.title} description={c.description} 
+                            date={c.date} rank={c.rank} tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}
+                            />
+                }
+                return null
             })
+            
+           
             :
             <div className="empty-container" style={{maxWidth:"640px", margin:"auto"}}>
                 <img src={cookieLogo} alt="Cookie Logo"/>
@@ -231,10 +254,6 @@ function CookieItem(props){
     }
 
     // #endregion
-
-    console.log("IMAGE PROPS",props.image) 
-    console.log("IMAGE STATE",image) 
-    console.log("IMAGE DATA",imgData) 
     
     return(
         <>

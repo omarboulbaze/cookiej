@@ -71,7 +71,7 @@
 
 .cookie-grouper{
     margin: 1rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
     margin-bottom: 8rem;
 }
 
@@ -352,4 +352,48 @@ opacity: 0.5;
 }
 .date-input:focus, .select:focus{
     outline: none;
+}
+.toolbar-container{
+    padding-inline: 1rem;
+}
+.toolbar{
+    background-color: rgba(255, 255, 255, 0.788);
+    max-width: 40rem;
+    margin: auto;
+    margin-top: 1rem;
+    border-radius: 10px;
+    padding: 1rem;
+    box-sizing: border-box;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.034);
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.toolbar .search{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: center;
+}
+.toolbar .search .icon{
+    margin-right: 0.5rem;
+}
+.toolbar input{
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.13);
+    font-size: 1rem;
+    padding: 0.5rem;
+    width: 100%;
+}
+.toolbar input:focus{
+    outline: none;
+}
+.toolbar .sort-icon{
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+.toolbar-container .sort-icon:active{
+background-color: rgba(0, 0, 0, 0.103);
 }

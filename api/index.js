@@ -49,8 +49,6 @@ const Cookie = require('./models/cookie');
 // Adding a cookie to the database.
 app.post('/api/addCookie', upload.single('image'),(req, res)=> {
 
-    // console.log(req.file);
-
     const cookie = new Cookie({
         _id: new mongoose.Types.ObjectId(),
         image: req.file ? req.file.filename : null,
@@ -64,7 +62,6 @@ app.post('/api/addCookie', upload.single('image'),(req, res)=> {
     cookie.save( (err,data)=> {
               if(err) return res.status(500).json(err);           
               res.status(201).json(data);
-              // console.log(data);
             }
         );
     }
