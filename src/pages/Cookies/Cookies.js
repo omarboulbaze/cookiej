@@ -13,7 +13,7 @@ import Topbar from "../Components/Topbar/Topbar";
 import Alert from "../Components/Alert/Alert";
 import {timeAgo} from '../Add/Add';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus, faXmarkCircle, faMagnifyingGlass, faArrowUpAZ} from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus, faXmarkCircle, faMagnifyingGlass, faArrowUpWideShort, faRectangleList, faClose, faCalendar, faArrowUpAZ} from "@fortawesome/free-solid-svg-icons";
 
 //  Importing axios
 const axios = require('axios');
@@ -35,12 +35,27 @@ function Cookies(){
                         if(res.data.length > 0) setCookiesData(res.data);
                     }).catch(e => console.log('GET request', e));
                 },[])
-
+                
+    
     // Alert management
     const [alert, setAlert] = useState(null);
 
     // Search
     const [searchText, setSearchText] = useState("");
+    // Group and Sort
+    const [groupMode, setGroupMode] = useState(false)
+    const [sortMode, setSortMode] = useState(false)
+    const [sortBy, setSortBy] = useState()
+    const [groupBy, setGroupBy] = useState()
+    
+    // Reference of the ranks
+    let ranks = {
+        bronze: 1,
+        silver:2,
+        gold:3,
+        platinum:4,
+        diamond:5
+    }
 
     return(
         <>
@@ -48,30 +63,66 @@ function Cookies(){
         <Topbar text="My Cookies"/>
         { cookiesData.length > 1 ?
         <div className="toolbar-container">
-            <div className="toolbar">
-            <div className="search">
-                <FontAwesomeIcon className="icon" icon={faMagnifyingGlass}/>
-                <input type="text" placeholder={`Search ${cookiesData.length} cookies...`} value={searchText} onChange={(e)=> setSearchText(e.target.value)}/>
-            </div>
-            <FontAwesomeIcon className="sort-icon" icon={faArrowUpAZ}/>
-            </div>
+            {
+                !sortMode && !groupMode ?
+                <div className="toolbar">
+                <div className="search">
+                    <FontAwesomeIcon className="icon" icon={faMagnifyingGlass}/>
+                    <input type="text" placeholder={`Search ${cookiesData.length} cookies...`} value={searchText} onChange={(e)=> setSearchText(e.target.value)}/>
+                </div>
+                <div className="icons">
+                    <FontAwesomeIcon className="toolbar-icon" onClick={()=> setGroupMode(true)} icon={faRectangleList}/>
+                    <FontAwesomeIcon className="toolbar-icon" onClick={()=> setSortMode(true)} icon={faArrowUpWideShort}/>
+                </div>
+                
+                </div>
+
+                :  
+
+                sortMode ?
+                // Sort by
+                <div className="toolbar">
+                    <FontAwesomeIcon icon={faArrowUpWideShort}/>
+                    <div>
+                        <FontAwesomeIcon className={ sortBy === "date" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faCalendar} onClick={sortBy === "date" ? ()=>setSortBy() : ()=>setSortBy("date")}/>
+                        <FontAwesomeIcon className={ sortBy === "rank" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faTrophy} onClick={sortBy === "rank" ? ()=>setSortBy() : ()=>setSortBy("rank")}/>
+                        <FontAwesomeIcon className={ sortBy === "az" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faArrowUpAZ} onClick={sortBy === "az" ? ()=>setSortBy() : ()=>setSortBy("az")}/>
+                    </div>
+                        <FontAwesomeIcon className="toolbar-icon" icon={faClose} onClick={()=> setSortMode(false)} />
+                </div>
+                :
+                // Group by
+                <div className="toolbar">
+                    <FontAwesomeIcon icon={faRectangleList}/>
+                    <div>
+                        <FontAwesomeIcon className="toolbar-icon-click" icon={faCalendar}/>
+                        <FontAwesomeIcon className="toolbar-icon-click" icon={faTrophy}/>
+                        <FontAwesomeIcon className="toolbar-icon-click" icon={faArrowUpAZ}/>
+                    </div>
+                    <FontAwesomeIcon className="toolbar-icon" icon={faClose} onClick={()=> setGroupMode(false)} />
+                </div>
+                
+            }
+            
         </div>
         :
         null
         }
         
-        
         <div className="cookie-grouper">
 
-        {cookiesData.length > 0 ?
-            cookiesData.map( c => {
+        {
+        cookiesData.length > 0 ?
+        
+             cookiesData.map( c => {
                 if(c.title.toLowerCase().includes(searchText.toLowerCase())  || c.description.toLowerCase().includes(searchText.toLowerCase())){
                     return <CookieItem  key={c._id} id={c._id} image={c.image} title={c.title} description={c.description} 
-                            date={c.date} rank={c.rank} tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}
-                            />
+                            date={c.date} rank={c.rank} tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}/>
                 }
                 return null
             })
+        
+            
             
            
             :

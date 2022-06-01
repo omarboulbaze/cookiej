@@ -379,6 +379,7 @@ opacity: 0.5;
 }
 .toolbar .search .icon{
     margin-right: 0.5rem;
+    font-size: 1rem;
 }
 .toolbar input{
     border-radius: 10px;
@@ -390,10 +391,24 @@ opacity: 0.5;
 .toolbar input:focus{
     outline: none;
 }
-.toolbar .sort-icon{
+.toolbar .toolbar-icon{
     border-radius: 5px;
     padding: 0.5rem;
 }
-.toolbar-container .sort-icon:active{
-background-color: rgba(0, 0, 0, 0.103);
+
+.toolbar-icon-click{
+    border-radius: 5px;
+    padding: 0.5rem;
+    color: white;
+    margin-inline: 0.1rem;
+    background-color:  rgba(0, 0, 0, 0.432);
 }
+.toolbar-icon-click.active{
+    border-radius: 5px;
+    padding: 0.5rem;
+    color: white;
+    margin-inline: 0.1rem;
+    background-color:  rgba(0, 0, 0, 0.74);
+}
+
+
