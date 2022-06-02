@@ -26,42 +26,78 @@ function Cookies(){
 
     document.title = "My Cookies | Cookie Jar";
 
-    // Retrieving the cookies from the database
-    const [cookiesData, setCookiesData] = useState([]);
-
-    useEffect(()=>{
-                    axios.get(apiUrl+'/')
-                    .then(res => {
-                        if(res.data.length > 0) setCookiesData(res.data);
-                    }).catch(e => console.log('GET request', e));
-                },[])
-                
-    
     // Alert management
     const [alert, setAlert] = useState(null);
 
-    // Search
-    const [searchText, setSearchText] = useState("");
-    // Group and Sort
-    const [groupMode, setGroupMode] = useState(false)
-    const [sortMode, setSortMode] = useState(false)
-    const [sortBy, setSortBy] = useState()
-    const [groupBy, setGroupBy] = useState()
+    // Retrieving the cookies from the database
+    const [cookiesData, setCookiesData] = useState([]);
     
-    // Reference of the ranks
-    let ranks = {
-        bronze: 1,
-        silver:2,
-        gold:3,
-        platinum:4,
-        diamond:5
+    function sortByDefault(){
+        setSortBy("")
+        axios.get(apiUrl+'/')
+        .then(res => { if(res.data.length > 0) setCookiesData(res.data) })
+        .catch(e => console.log('GET request', e));
     }
 
+    // On Component Mount
+    useEffect(()=>{ sortByDefault() },[])
+
+    // Search
+    const [searchText, setSearchText] = useState("");
+    // Group & Sort states
+    const [groupMode, setGroupMode] = useState(false)
+    const [sortMode, setSortMode] = useState(false)
+    const [sortBy, setSortBy] = useState("")
+
+    // Sorting cookies by Date (Newest to Oldest)
+      function sortByDate(){
+          setSortBy("date");
+        let sortedArray = cookiesData;
+            sortedArray.sort((a,b)=>{
+                if (a.date < b.date) return 1
+                if (a.date > b.date) return -1
+                return 0
+                })
+            setCookiesData(sortedArray)
+      }  
+
+      // Sorting cookies by Rank (Higher rank to Lower rank)
+      const ranks = { bronze:1, silver:2, gold:3, platinum:4, diamond:5 }
+      
+      // Getting the rank of the cookie (string) and making it a number to rank the cookies
+      function rankToNumber(cookie){ return ranks[cookie.rank] }
+
+      // Main function
+      function sortByRank(){
+        setSortBy("rank");
+        let sortedArray = cookiesData;
+            sortedArray.sort((a,b)=>{
+                if (rankToNumber(a) < rankToNumber(b)) return 1
+                if(rankToNumber(a) > rankToNumber(b)) return -1
+                return 0
+                })
+            setCookiesData(sortedArray)
+      }
+
+      // Sorting cookies by alphabetical order
+      function sortByAz(){
+        setSortBy("az");
+        let sortedArray = cookiesData;
+            sortedArray.sort((a,b)=>{ 
+                if(a.title.toLowerCase() < b.title.toLowerCase()) { return -1; }
+                if(a.title.toLowerCase() > b.title.toLowerCase()) { return 1; }
+                return 0;
+            })
+            setCookiesData(sortedArray)
+      }
+    
     return(
         <>
         {alert}
         <Topbar text="My Cookies"/>
-        { cookiesData.length > 1 ?
+        { 
+        // #region Toolbar
+        cookiesData.length > 1 ?
         <div className="toolbar-container">
             {
                 !sortMode && !groupMode ?
@@ -84,9 +120,9 @@ function Cookies(){
                 <div className="toolbar">
                     <FontAwesomeIcon icon={faArrowUpWideShort}/>
                     <div>
-                        <FontAwesomeIcon className={ sortBy === "date" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faCalendar} onClick={sortBy === "date" ? ()=>setSortBy() : ()=>setSortBy("date")}/>
-                        <FontAwesomeIcon className={ sortBy === "rank" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faTrophy} onClick={sortBy === "rank" ? ()=>setSortBy() : ()=>setSortBy("rank")}/>
-                        <FontAwesomeIcon className={ sortBy === "az" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faArrowUpAZ} onClick={sortBy === "az" ? ()=>setSortBy() : ()=>setSortBy("az")}/>
+                        <FontAwesomeIcon className={ sortBy === "date" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faCalendar} onClick={sortBy === "date" ? ()=> sortByDefault() : ()=>sortByDate()}/>
+                        <FontAwesomeIcon className={ sortBy === "rank" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faTrophy} onClick={sortBy === "rank" ? ()=> sortByDefault() : ()=>sortByRank()}/>
+                        <FontAwesomeIcon className={ sortBy === "az" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faArrowUpAZ} onClick={sortBy === "az" ? ()=> sortByDefault() : ()=>sortByAz()}/>
                     </div>
                         <FontAwesomeIcon className="toolbar-icon" icon={faClose} onClick={()=> setSortMode(false)} />
                 </div>
@@ -107,30 +143,34 @@ function Cookies(){
         </div>
         :
         null
+
+        // #endregion Toolbar
         }
         
         <div className="cookie-grouper">
 
         {
-        cookiesData.length > 0 ?
-        
-             cookiesData.map( c => {
-                if(c.title.toLowerCase().includes(searchText.toLowerCase())  || c.description.toLowerCase().includes(searchText.toLowerCase())){
-                    return <CookieItem  key={c._id} id={c._id} image={c.image} title={c.title} description={c.description} 
-                            date={c.date} rank={c.rank} tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}/>
-                }
-                return null
-            })
-        
             
-            
-           
-            :
-            <div className="empty-container" style={{maxWidth:"640px", margin:"auto"}}>
-                <img src={cookieLogo} alt="Cookie Logo"/>
-                <h1>No cookies yet</h1>
-                <span><a href="./add">Add</a> your first cookie to your personal Cookie Jar!</span>
-            </div>
+        cookiesData.length > 0 
+        
+        ?
+          
+        cookiesData.map( c => {
+            if(c.title.toLowerCase().includes(searchText.toLowerCase())  || c.description.toLowerCase().includes(searchText.toLowerCase())){
+                return <CookieItem  key={c._id} id={c._id} image={c.image} title={c.title} description={c.description} 
+                        date={c.date} rank={c.rank} tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}/>
+            }
+            return null
+        })
+      
+        :
+
+        <div className="empty-container" style={{maxWidth:"640px", margin:"auto"}}>
+            <img src={cookieLogo} alt="Cookie Logo"/>
+            <h1>No cookies yet</h1>
+            <span><a href="./add">Add</a> your first cookie to your personal Cookie Jar!</span>
+        </div>
+
         }
 
         </div>
