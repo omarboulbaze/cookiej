@@ -13,7 +13,7 @@ import Topbar from "../Components/Topbar/Topbar";
 import Alert from "../Components/Alert/Alert";
 import {timeAgo} from '../Add/Add';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus, faXmarkCircle, faMagnifyingGlass, faArrowUpWideShort, faRectangleList, faClose, faCalendar, faArrowUpAZ} from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus, faXmarkCircle, faMagnifyingGlass, faArrowUpWideShort, faRectangleList, faClose, faCalendar, faArrowUpAZ, faTag} from "@fortawesome/free-solid-svg-icons";
 
 //  Importing axios
 const axios = require('axios');
@@ -28,10 +28,16 @@ function Cookies(){
 
     // Alert management
     const [alert, setAlert] = useState(null);
+    // Search
+    const [searchText, setSearchText] = useState("");
+
+    // #region On Component Mount
 
     // Retrieving the cookies from the database
     const [cookiesData, setCookiesData] = useState([]);
-    
+
+    useEffect(()=>{ sortByDefault() },[])
+
     function sortByDefault(){
         setSortBy("")
         axios.get(apiUrl+'/')
@@ -39,13 +45,10 @@ function Cookies(){
         .catch(e => console.log('GET request', e));
     }
 
-    // On Component Mount
-    useEffect(()=>{ sortByDefault() },[])
+    // #endregion On Component Mount
 
-    // Search
-    const [searchText, setSearchText] = useState("");
-    // Group & Sort states
-    const [groupMode, setGroupMode] = useState(false)
+    // #region Cookie sorting
+
     const [sortMode, setSortMode] = useState(false)
     const [sortBy, setSortBy] = useState("")
 
@@ -90,7 +93,41 @@ function Cookies(){
             })
             setCookiesData(sortedArray)
       }
+
+    // #endregion Cookie sorting
     
+    // #region Cookie grouping
+    const [groupMode, setGroupMode] = useState(false)
+    const [groupBy, setGroupBy] = useState("")
+    
+    function groupByDate(){
+        setGroupBy("date")
+    }
+
+    function groupByRank(){
+        setGroupBy("rank")
+    }
+
+    function groupByTag(){
+        setGroupBy("tag")
+        // Making an array of all the cookie tags
+        let tags = []
+        cookiesData.forEach(c => {
+            if(!tags.some(t => {return t.tag === c.tag} )){
+                tags.push({tag:c.tag, content:[c]})
+            }else{
+                tags.forEach(t =>{
+                    if(t.tag === c.tag){
+                        t.content.push(c)
+                    }
+                })
+            }
+        })
+        console.log(tags)
+        
+    }
+    // #endregion Cookie grouping
+
     return(
         <>
         {alert}
@@ -131,9 +168,9 @@ function Cookies(){
                 <div className="toolbar">
                     <FontAwesomeIcon icon={faRectangleList}/>
                     <div>
-                        <FontAwesomeIcon className="toolbar-icon-click" icon={faCalendar}/>
-                        <FontAwesomeIcon className="toolbar-icon-click" icon={faTrophy}/>
-                        <FontAwesomeIcon className="toolbar-icon-click" icon={faArrowUpAZ}/>
+                        <FontAwesomeIcon className={ groupBy === "date" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faCalendar} onClick={groupBy === "date" ? ()=> sortByDefault() : ()=>groupByDate()}/>
+                        <FontAwesomeIcon className={ groupBy === "rank" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faTrophy} onClick={groupBy === "rank" ? ()=> sortByDefault() : ()=>groupByRank()}/>
+                        <FontAwesomeIcon className={ groupBy === "tag" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faTag} onClick={groupBy === "tag" ? ()=> sortByDefault() : ()=>groupByTag()}/>
                     </div>
                     <FontAwesomeIcon className="toolbar-icon" icon={faClose} onClick={()=> setGroupMode(false)} />
                 </div>
