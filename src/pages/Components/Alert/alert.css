@@ -28,7 +28,7 @@
     animation: show .5s ease-in-out;
 }
 .alert-container.hide{
-        animation: hide .3s ease-in-out forwards;
+    animation: hide .3s ease-in-out forwards;
 }
  
 .alert-wrapper{

@@ -13,7 +13,7 @@ import Topbar from "../Components/Topbar/Topbar";
 import Alert from "../Components/Alert/Alert";
 import {timeAgo} from '../Add/Add';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus, faXmarkCircle, faMagnifyingGlass, faArrowUpWideShort, faRectangleList, faClose, faCalendar, faArrowUpAZ, faTag} from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus, faXmarkCircle, faMagnifyingGlass, faArrowUpWideShort, faRectangleList, faClose, faCalendar, faArrowUpAZ, faTag, faCaretUp} from "@fortawesome/free-solid-svg-icons";
 
 //  Importing axios
 const axios = require('axios');
@@ -99,6 +99,7 @@ function Cookies(){
     // #region Cookie grouping
     const [groupMode, setGroupMode] = useState(false)
     const [groupBy, setGroupBy] = useState("")
+    const [tags] = useState([])
     
     function groupByDate(){
         setGroupBy("date")
@@ -111,7 +112,6 @@ function Cookies(){
     function groupByTag(){
         setGroupBy("tag")
         // Making an array of all the cookie tags
-        let tags = []
         cookiesData.forEach(c => {
             if(!tags.some(t => {return t.tag === c.tag} )){
                 tags.push({tag:c.tag, content:[c]})
@@ -126,6 +126,13 @@ function Cookies(){
         console.log(tags)
         
     }
+
+    function groupByDefault(){
+        setGroupBy("")
+    }
+
+    const [collapsed, setCollapsed] = useState(false)
+
     // #endregion Cookie grouping
 
     return(
@@ -168,9 +175,9 @@ function Cookies(){
                 <div className="toolbar">
                     <FontAwesomeIcon icon={faRectangleList}/>
                     <div>
-                        <FontAwesomeIcon className={ groupBy === "date" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faCalendar} onClick={groupBy === "date" ? ()=> sortByDefault() : ()=>groupByDate()}/>
-                        <FontAwesomeIcon className={ groupBy === "rank" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faTrophy} onClick={groupBy === "rank" ? ()=> sortByDefault() : ()=>groupByRank()}/>
-                        <FontAwesomeIcon className={ groupBy === "tag" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faTag} onClick={groupBy === "tag" ? ()=> sortByDefault() : ()=>groupByTag()}/>
+                        <FontAwesomeIcon className={ groupBy === "date" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faCalendar} onClick={groupBy === "date" ? ()=> groupByDefault() : ()=>groupByDate()}/>
+                        <FontAwesomeIcon className={ groupBy === "rank" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faTrophy} onClick={groupBy === "rank" ? ()=> groupByDefault() : ()=>groupByRank()}/>
+                        <FontAwesomeIcon className={ groupBy === "tag" ? "toolbar-icon-click active" : "toolbar-icon-click"} icon={faTag} onClick={groupBy === "tag" ? ()=> groupByDefault() : ()=>groupByTag()}/>
                     </div>
                     <FontAwesomeIcon className="toolbar-icon" icon={faClose} onClick={()=> setGroupMode(false)} />
                 </div>
@@ -185,21 +192,26 @@ function Cookies(){
         }
         
         <div className="cookie-grouper">
-
+        <div className={collapsed ? "cookie-tag-group collapsed" : "cookie-tag-group"} onClick={!collapsed ? ()=> setCollapsed(true) : ()=> setCollapsed(false)}>
+            <div className="cookie-tag-head">
+                <span className="cookie-title-group">Fitness</span>
+                <FontAwesomeIcon icon={faCaretUp} className="icon"/>
+            </div>
+        
         {
             
         cookiesData.length > 0 
         
         ?
-          
+
         cookiesData.map( c => {
             if(c.title.toLowerCase().includes(searchText.toLowerCase())  || c.description.toLowerCase().includes(searchText.toLowerCase())){
                 return <CookieItem  key={c._id} id={c._id} image={c.image} title={c.title} description={c.description} 
                         date={c.date} rank={c.rank} tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}/>
             }
-            return null
-        })
-      
+                    return null
+                        })
+        
         :
 
         <div className="empty-container" style={{maxWidth:"640px", margin:"auto"}}>
@@ -209,7 +221,7 @@ function Cookies(){
         </div>
 
         }
-
+        </div>
         </div>
         </>
     )
