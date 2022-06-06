@@ -13,7 +13,8 @@ import Topbar from "../Components/Topbar/Topbar";
 import Alert from "../Components/Alert/Alert";
 import {timeAgo} from '../Add/Add';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus, faXmarkCircle, faMagnifyingGlass, faArrowUpWideShort, faRectangleList, faClose, faCalendar, faArrowUpAZ, faTag, faCaretUp} from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrashAlt, faCheckCircle, faRotate, faFloppyDisk, faXmark, faTrophy, faPlus, faXmarkCircle, faMagnifyingGlass, faArrowUpWideShort, faRectangleList, faClose,
+     faCalendar, faArrowUpAZ, faTag, faCaretUp, faCaretDown, faTags} from "@fortawesome/free-solid-svg-icons";
 
 //  Importing axios
 const axios = require('axios');
@@ -97,10 +98,15 @@ function Cookies(){
     // #endregion Cookie sorting
     
     // #region Cookie grouping
+
     const [groupMode, setGroupMode] = useState(false)
     const [groupBy, setGroupBy] = useState("")
-    const [tags] = useState([])
     
+    function groupByDefault(){
+        setGroupBy("")
+        setTags([])
+    }
+
     function groupByDate(){
         setGroupBy("date")
     }
@@ -109,30 +115,66 @@ function Cookies(){
         setGroupBy("rank")
     }
 
+    // #region Group by tag
+
+    // Array that contains the cookies grouped by tag
+    const [tags, setTags] = useState([])
+
+    // Clearing Tags state when groupBy is not equal to "tag" anymore
+    useEffect(()=>{
+        if(groupBy !== "tag") setTags([])
+    },[groupBy])
+   
+    //TODO: When user deletes/edits a cookie, update automatically the states
+    
     function groupByTag(){
+
         setGroupBy("tag")
-        // Making an array of all the cookie tags
-        cookiesData.forEach(c => {
-            if(!tags.some(t => {return t.tag === c.tag} )){
-                tags.push({tag:c.tag, content:[c]})
-            }else{
-                tags.forEach(t =>{
-                    if(t.tag === c.tag){
-                        t.content.push(c)
-                    }
-                })
-            }
-        })
-        console.log(tags)
+        groupCookiesByTag()
         
     }
 
-    function groupByDefault(){
-        setGroupBy("")
+    // Function that take all the cookies and group them by tag
+    function groupCookiesByTag(){
+        let temporaryTagArray = tags;
+        cookiesData.forEach(cookie => {
+            if(!temporaryTagArray.some(arrayTag => {return arrayTag.name === cookie.tag} )){ temporaryTagArray.push({name:cookie.tag, content:[cookie]}) 
+            }else{ temporaryTagArray.forEach(arrayTag =>{ if(arrayTag.name === cookie.tag)  arrayTag.content.push(cookie) })}
+        })
+        setTags(temporaryTagArray)
     }
+  
+    // #endregion Group by tag
 
-    const [collapsed, setCollapsed] = useState(false)
+    function CookieGroup(props){
 
+        const [collapsed, setCollapsed] = useState(true)
+
+        function collpaseGroup(){
+            if(collapsed){ setCollapsed(false) } else { setCollapsed(true) }
+        }
+
+        return (
+            <>
+                <div className={collapsed ? "cookie-group-tag collapsed" : "cookie-group-tag"}>
+                    <div className="cookie-group-head" onClick={()=> collpaseGroup()}>
+                        <span className="cookie-group-title">{props.tag.name ? props.tag.name : <FontAwesomeIcon icon={faTags}/>}</span>
+                        <FontAwesomeIcon icon={collapsed ? faCaretDown : faCaretUp} className="icon"/>
+                    </div>
+                    {
+                    props.tag.content.map( c => {
+                    if(c.title.toLowerCase().includes(searchText.toLowerCase())  || c.description.toLowerCase().includes(searchText.toLowerCase())){
+                        return <CookieItem key={"tag"+c._id} id={c._id} image={c.image} title={c.title} description={c.description} 
+                                date={c.date} rank={c.rank} tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}/>
+                        }
+                        return null
+                        })
+                    }
+                </div>
+            </>
+           
+        )
+    }
     // #endregion Cookie grouping
 
     return(
@@ -192,36 +234,38 @@ function Cookies(){
         }
         
         <div className="cookie-grouper">
-        <div className={collapsed ? "cookie-tag-group collapsed" : "cookie-tag-group"} onClick={!collapsed ? ()=> setCollapsed(true) : ()=> setCollapsed(false)}>
-            <div className="cookie-tag-head">
-                <span className="cookie-title-group">Fitness</span>
-                <FontAwesomeIcon icon={faCaretUp} className="icon"/>
-            </div>
-        
-        {
-            
-        cookiesData.length > 0 
-        
-        ?
 
-        cookiesData.map( c => {
-            if(c.title.toLowerCase().includes(searchText.toLowerCase())  || c.description.toLowerCase().includes(searchText.toLowerCase())){
-                return <CookieItem  key={c._id} id={c._id} image={c.image} title={c.title} description={c.description} 
-                        date={c.date} rank={c.rank} tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}/>
-            }
-                    return null
+        {
+            groupBy === "tag"
+
+            ?
+
+            tags.map( tag => {
+                return <CookieGroup tag={tag} key={tag.name}/>
+            })
+            :
+                (
+                    cookiesData.length > 0  ? 
+                    
+                    cookiesData.map( c => {
+                        if(c.title.toLowerCase().includes(searchText.toLowerCase())  || c.description.toLowerCase().includes(searchText.toLowerCase()))
+                            { return <CookieItem key={c._id} id={c._id} image={c.image} title={c.title} description={c.description} date={c.date} rank={c.rank}
+                             tag={c.tag} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlert={setAlert} alert={alert}/>
+                            }
+                            return null
                         })
         
-        :
+                    :
 
-        <div className="empty-container" style={{maxWidth:"640px", margin:"auto"}}>
-            <img src={cookieLogo} alt="Cookie Logo"/>
-            <h1>No cookies yet</h1>
-            <span><a href="./add">Add</a> your first cookie to your personal Cookie Jar!</span>
-        </div>
+                    <div className="empty-container" style={{maxWidth:"640px", margin:"auto"}}>
+                        <img src={cookieLogo} alt="Cookie Logo"/>
+                        <h1>No cookies yet</h1>
+                        <span><a href="./add">Add</a> your first cookie to your personal Cookie Jar!</span>
+                    </div>
+                )
 
         }
-        </div>
+        
         </div>
         </>
     )
@@ -229,14 +273,15 @@ function Cookies(){
 
 function CookieItem(props){
 
-    // Edit mode states
+    // #region Edit mode states
     const [image, setImage] = useState(props.image)
     const [title,setTitle] = useState(props.title)
     const [description, setDescription] = useState(props.description)
     const [date, setDate] = useState(props.date)
     const [rank, setRank] = useState(props.rank)
     const [tag, setTag] = useState(props.tag)
-    
+    // #endregion Edit mode states
+
     // #region Dynamically setting the cookie colors
     let hue;
     let saturation = "100%" ;
