@@ -1,12 +1,12 @@
 // React
-import { useState, useRef} from "react";
+import { useState, useRef } from "react";
 // Components
 import Alert from "../../Components/Alert/Alert";
 import OverlayEdit from "./OverlayEdit";
 // Global functions
 import { timeAgo } from "../../Add/Add";
 // Images
-import cookieLogoDetailed from "../../../assets/cookieLogo.png"
+import cookieLogoDetailed from "../../../assets/cookieLogo.png";
 // Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -25,7 +25,7 @@ import {
 import { apiUrl } from "../../../Root";
 
 //  Importing axios
-import axios from 'axios'
+import axios from "axios";
 
 function CookieItem(props) {
   // #region Edit mode states
@@ -106,6 +106,19 @@ function CookieItem(props) {
       }, 100);
       props.setCookiesData(
         props.cookiesData.filter((cookies) => cookies._id !== props.id)
+      );
+
+      props.setTags(
+        props.arrayTags.map((tag) => {
+          if (tag.name === props.tag) {
+            return {
+              name: tag.name,
+              content: tag.content.filter((cookie) => cookie._id !== props.id),
+            };
+          } else {
+            return tag;
+          }
+        })
       );
     }
   }
@@ -193,9 +206,9 @@ function CookieItem(props) {
         { headers: { "Content-Type": "multipart/form-data" } }
       )
       .then(() => {
-        props.setAlert(null); // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
+        props.setAlertState(null); // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
         setTimeout(() => {
-          props.setAlert(
+          props.setAlertState(
             <Alert
               text="Your changes have been successfully saved."
               hue="120"

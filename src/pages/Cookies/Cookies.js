@@ -40,7 +40,7 @@ function Cookies() {
   const [searchText, setSearchText] = useState("");
 
   // #region On Component Mount
-  
+
   // Retrieving the cookies from the database
   const [cookiesData, setCookiesData] = useState([]);
 
@@ -135,8 +135,6 @@ function Cookies() {
 
   // #region Group by tag
 
-  //TODO: When user deletes/edits a cookie, update automatically the states
-
   // Array that contains the cookies grouped by tag
   const [tags, setTags] = useState([]);
 
@@ -161,7 +159,6 @@ function Cookies() {
         });
       }
     });
-    console.log(temporaryTagArray)
     setTags(temporaryTagArray);
   }
 
@@ -315,7 +312,23 @@ function Cookies() {
       <div className="cookie-grouper">
         {groupBy === "tag" ? (
           tags.map((tag) => {
-            return <CookieGroup tag={tag} key={tag.name} searchText={searchText} cookiesData={cookiesData} setCookiesData={setCookiesData} setAlertState={setAlertState}/>;
+            if(tag.content.length > 0) { 
+              return (
+              <CookieGroup
+                tag={tag}
+                key={tag.name}
+                searchText={searchText}
+                cookiesData={cookiesData}
+                setCookiesData={setCookiesData}
+                setAlertState={setAlertState}
+                arrayTags={tags}
+                setTags={setTags}
+                groupCookiesByTag={groupCookiesByTag}
+              />
+            )}else{
+              return null
+            }
+           
           })
         ) : cookiesData.length > 0 ? (
           cookiesData.map((c) => {

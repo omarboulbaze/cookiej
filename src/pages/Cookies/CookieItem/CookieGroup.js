@@ -33,6 +33,7 @@ function CookieGroup(props) {
         >
           <div className="cookie-group-head" onClick={() => collpaseGroup()}>
             <span className="cookie-group-title">
+            <span className="cookie-group-length">{props.tag.content.length}</span>
               {props.tag.name ? (
                 props.tag.name
               ) : (
@@ -62,6 +63,10 @@ function CookieGroup(props) {
                   cookiesData={props.cookiesData}
                   setCookiesData={props.setCookiesData}
                   setAlertState={props.setAlertState}
+                  arrayTags={props.arrayTags}
+                  setTags={props.setTags}
+                  groupCookiesByTag={props.groupCookiesByTag}
+
                 />
               );
             }
