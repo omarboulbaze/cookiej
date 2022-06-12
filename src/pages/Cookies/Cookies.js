@@ -176,7 +176,7 @@ function Cookies() {
       <Topbar text="My Cookies" />
       {
         // #region Toolbar
-        cookiesData.length > 1 ? (
+        cookiesData.length > 0 ? (
           <div className="toolbar-container">
             {!sortMode && !groupMode ? (
               <div className="toolbar">
@@ -184,7 +184,7 @@ function Cookies() {
                   <FontAwesomeIcon className="icon" icon={faMagnifyingGlass} />
                   <input
                     type="text"
-                    placeholder={`Search ${cookiesData.length} cookies...`}
+                    placeholder={cookiesData.length === 1 ? `Search...` : `Search ${cookiesData.length} cookies...`}
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                   />

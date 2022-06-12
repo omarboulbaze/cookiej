@@ -108,18 +108,21 @@ function CookieItem(props) {
         props.cookiesData.filter((cookies) => cookies._id !== props.id)
       );
 
-      props.setTags(
-        props.arrayTags.map((tag) => {
-          if (tag.name === props.tag) {
-            return {
-              name: tag.name,
-              content: tag.content.filter((cookie) => cookie._id !== props.id),
-            };
-          } else {
-            return tag;
-          }
-        })
-      );
+      if(props.arrayTags){
+        props.setTags(
+          props.arrayTags.map((tag) => {
+            if (tag.name === props.tag) {
+              return {
+                name: tag.name,
+                content: tag.content.filter((cookie) => cookie._id !== props.id),
+              };
+            } else {
+              return tag;
+            }
+          })
+        );
+      }
+      
     }
   }
 
@@ -192,6 +195,27 @@ function CookieItem(props) {
   }
 
   function saveEditChanges() {
+
+    // Updating cookiesData from child component using the setCookiesData method in order to update the DOM (Document Object Model)
+
+    props.setCookiesData(
+      props.cookiesData.map( cookie => {
+        if (cookie._id === props.id){
+          return {
+          _id:props.id,
+          image: image,
+          title: title,
+          description: description,
+          date: date,
+          rank: rank,
+          tag: tag
+          }
+        }else{
+          return cookie
+        }
+      })
+    )
+
     axios
       .put(
         `${apiUrl}/update/${props.id}`,
