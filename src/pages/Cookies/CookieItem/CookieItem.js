@@ -51,7 +51,7 @@ function CookieItem(props) {
     case "silver":
       hue = 0;
       saturation = "0%";
-      lightness = "100%";
+      lightness = "97%";
       saturationBg = "0%";
       lightnessBg = "93%";
       break;
@@ -215,6 +215,8 @@ function CookieItem(props) {
         }
       })
     )
+
+    // Sending a PUT request to the API
 
     axios
       .put(
