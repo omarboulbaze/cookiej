@@ -19,7 +19,7 @@ Each of us has dealt with our own share of challenges and hardships over the cou
 
 The Cookie Jar Method works like this :
 
-- Imagine you have Empty Cookie Jar into which you place all of the challenges that you have overcome or the accomplishments that you have achieved (Cookies).
+- Imagine you have Empty Cookie Jar into which you place all the challenges that you have overcome or the accomplishments that you have achieved (Cookies).
 
 - Whenever you are facing an obstacle or hardship, refer back to your cookie jar to remind yourself of everything that you have been through and how resilient you are.
 
