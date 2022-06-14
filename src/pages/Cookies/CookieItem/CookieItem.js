@@ -43,6 +43,7 @@ function CookieItem(props) {
   let saturationBg = "78%";
   let lightness = "80%";
   let lightnessBg = "91%";
+
   switch (rank) {
     case "bronze":
       hue = 30;
@@ -60,19 +61,20 @@ function CookieItem(props) {
       break;
     case "platinum":
       hue = 300;
-      // lightness = "77%"
       break;
     case "diamond":
       hue = 200;
-      // lightness = "67%"
       break;
     default:
       break;
   }
+  
   const primaryColor = `hsl(${hue}, ${saturation}, ${lightness})`;
   const backgroundColor = `hsl(${hue}, ${saturationBg}, ${lightnessBg})`;
-  const dateColorEditMode = `hsl(${hue}, ${saturation}, 96%)`;
+  const dateColorEditMode = `hsl(${hue}, ${saturation}, 85%)`;
   const buttonColorEditMode = `hsl(${hue}, ${saturation}, 45%, 0.5)`;
+  const tagColor = `hsl(${hue}, ${saturation}, 85%)`;
+
   // #endregion
 
   // OnClick show the side button with an option to edit or delete the cookie
@@ -108,13 +110,15 @@ function CookieItem(props) {
         props.cookiesData.filter((cookies) => cookies._id !== props.id)
       );
 
-      if(props.arrayTags){
+      if (props.arrayTags) {
         props.setTags(
           props.arrayTags.map((tag) => {
             if (tag.name === props.tag) {
               return {
                 name: tag.name,
-                content: tag.content.filter((cookie) => cookie._id !== props.id),
+                content: tag.content.filter(
+                  (cookie) => cookie._id !== props.id
+                ),
               };
             } else {
               return tag;
@@ -122,7 +126,6 @@ function CookieItem(props) {
           })
         );
       }
-      
     }
   }
 
@@ -195,26 +198,25 @@ function CookieItem(props) {
   }
 
   function saveEditChanges() {
-
     // Updating cookiesData from child component using the setCookiesData method in order to update the DOM (Document Object Model)
 
     props.setCookiesData(
-      props.cookiesData.map( cookie => {
-        if (cookie._id === props.id){
+      props.cookiesData.map((cookie) => {
+        if (cookie._id === props.id) {
           return {
-          _id:props.id,
-          image: image,
-          title: title,
-          description: description,
-          date: date,
-          rank: rank,
-          tag: tag
-          }
-        }else{
-          return cookie
+            _id: props.id,
+            image: image,
+            title: title,
+            description: description,
+            date: date,
+            rank: rank,
+            tag: tag,
+          };
+        } else {
+          return cookie;
         }
       })
-    )
+    );
 
     // Sending a PUT request to the API
 
@@ -260,7 +262,7 @@ function CookieItem(props) {
       });
   }
   // Creating the reference of the <input/> in html.
-  const imageInputFile = useRef(null);
+  const imageInputFile = useRef();
   function replaceImage() {
     imageInputFile.current.click();
   }
@@ -306,10 +308,7 @@ function CookieItem(props) {
               />
               <div className="tag-date-container">
                 {tag ? (
-                  <span
-                    className="tag"
-                    style={{ backgroundColor: primaryColor }}
-                  >
+                  <span className="tag" style={{ backgroundColor: tagColor }}>
                     {tag}
                   </span>
                 ) : (

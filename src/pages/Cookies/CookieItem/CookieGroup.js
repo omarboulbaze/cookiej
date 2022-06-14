@@ -60,9 +60,9 @@ function CookieGroup(props) {
                   date={c.date}
                   rank={c.rank}
                   tag={c.tag}
+                  setAlertState={props.setAlertState}
                   cookiesData={props.cookiesData}
                   setCookiesData={props.setCookiesData}
-                  setAlertState={props.setAlertState}
                   arrayTags={props.arrayTags}
                   setTags={props.setTags}
                   groupCookiesByTag={props.groupCookiesByTag}

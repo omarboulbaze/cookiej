@@ -22,7 +22,7 @@ import {
   faClose,
   faCalendar,
   faArrowUpAZ,
-  faTag
+  faTag,
 } from "@fortawesome/free-solid-svg-icons";
 
 // API's url from Root
@@ -44,10 +44,6 @@ function Cookies() {
   // Retrieving the cookies from the database
   const [cookiesData, setCookiesData] = useState([]);
 
-  useEffect(() => {
-    sortByDefault();
-  }, []);
-
   function sortByDefault() {
     setSortBy("");
     axios
@@ -57,6 +53,11 @@ function Cookies() {
       })
       .catch((e) => console.log("GET request", e));
   }
+
+  // Once the component is mounted call sortByDefalut
+  useEffect(() => {
+    sortByDefault();
+  }, []);
 
   // #endregion On Component Mount
 
@@ -122,7 +123,7 @@ function Cookies() {
 
   function groupByDefault() {
     setGroupBy("");
-    setTags([]);
+    setTagsArray([]);
   }
 
   function groupByDate() {
@@ -136,16 +137,16 @@ function Cookies() {
   // #region Group by tag
 
   // Array that contains the cookies grouped by tag
-  const [tags, setTags] = useState([]);
+  const [tagsArray, setTagsArray] = useState([]);
 
-  // Clearing Tags state when groupBy is not equal to "tag" anymore
+  // Clearing tagsArray state when groupBy is not equal to "tag" anymore
   useEffect(() => {
-    if (groupBy !== "tag") setTags([]);
+    if (groupBy !== "tag") setTagsArray([]);
   }, [groupBy]);
 
   // Function that take all the cookies and group them by tag
   function groupCookiesByTag() {
-    let temporaryTagArray = tags;
+    let temporaryTagArray = tagsArray;
     cookiesData.forEach((cookie) => {
       if (
         !temporaryTagArray.some((arrayTag) => {
@@ -159,7 +160,7 @@ function Cookies() {
         });
       }
     });
-    setTags(temporaryTagArray);
+    setTagsArray(temporaryTagArray);
   }
 
   // Function triggered when the user clicks on the "Group By Tag" button
@@ -184,7 +185,11 @@ function Cookies() {
                   <FontAwesomeIcon className="icon" icon={faMagnifyingGlass} />
                   <input
                     type="text"
-                    placeholder={cookiesData.length === 1 ? `Search...` : `Search ${cookiesData.length} cookies...`}
+                    placeholder={
+                      cookiesData.length === 1
+                        ? `Search...`
+                        : `Search ${cookiesData.length} cookies...`
+                    }
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                   />
@@ -311,24 +316,24 @@ function Cookies() {
 
       <div className="cookie-grouper">
         {groupBy === "tag" ? (
-          tags.map((tag) => {
-            if(tag.content.length > 0) { 
+          tagsArray.map((tag) => {
+            if (tag.content.length > 0) {
               return (
-              <CookieGroup
-                tag={tag}
-                key={tag.name}
-                searchText={searchText}
-                cookiesData={cookiesData}
-                setCookiesData={setCookiesData}
-                setAlertState={setAlertState}
-                arrayTags={tags}
-                setTags={setTags}
-                groupCookiesByTag={groupCookiesByTag}
-              />
-            )}else{
-              return null
+                <CookieGroup
+                  tag={tag}
+                  key={tag.name}
+                  searchText={searchText}
+                  cookiesData={cookiesData}
+                  setCookiesData={setCookiesData}
+                  setAlertState={setAlertState}
+                  arrayTags={tagsArray}
+                  setTagsArray={setTagsArray}
+                  groupCookiesByTag={groupCookiesByTag}
+                />
+              );
+            } else {
+              return null;
             }
-           
           })
         ) : cookiesData.length > 0 ? (
           cookiesData.map((c) => {
