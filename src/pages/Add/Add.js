@@ -133,7 +133,7 @@ function Add() {
     if (!tagPlusVisible && tagsOpen) {
       tagInputRef.current.focus();
     }
-  }, [tagsOpen]);
+  }, [tagsOpen, tagPlusVisible]);
 
   // #region Adding the cookie to the database
 
