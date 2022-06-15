@@ -1,6 +1,6 @@
 # The Cookie Jar App
 
-![CookieJ Logo](/public/images/ios/apple-touch-icon.jpg)
+[![CookieJ Logo](/public/images/ios/apple-touch-icon.jpg)](https://cookie.omar.bio)
 
 ## Project Board
 ### Open the Scrum Board of this project by clicking below
