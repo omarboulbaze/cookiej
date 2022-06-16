@@ -1,7 +1,6 @@
 // React
 import { useState, useRef } from "react";
 // Components
-import Alert from "../../Components/Alert/Alert";
 import OverlayEdit from "./OverlayEdit";
 // Global functions
 import { timeAgo } from "../../Add/Add";
@@ -12,13 +11,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPen,
   faTrashAlt,
-  faCheckCircle,
   faRotate,
   faFloppyDisk,
   faXmark,
   faTrophy,
   faPlus,
-  faXmarkCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
 // API's url from Root
@@ -30,6 +27,8 @@ import axios from "axios";
 // Redux
 import { useSelector, useDispatch } from "react-redux";
 import { cookiesActions } from "../../../store/slices/cookies";
+import { alertActions } from "../../../store/slices/alert";
+
 
 function CookieItem(props) {
   // Redux configuration
@@ -105,19 +104,13 @@ function CookieItem(props) {
       axios
         .delete(apiUrl + "/delete/" + props.id)
         .then((res) => console.log(res.data));
-      props.setAlertState(null); // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
+      dispatch(alertActions.clear()) // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
       setTimeout(() => {
-        props.setAlertState(
-          <Alert
-            text="The cookie has been successfully removed from your cookie jar."
-            hue="120"
-            icon={faCheckCircle}
-          />
-        );
+        dispatch(alertActions.removeCookieSuccess())
       }, 100);
       dispatch(
         cookiesActions.setCookies(
-          props.cookiesData.filter((cookies) => cookies._id !== props.id)
+          cookies.filter((cookies) => cookies._id !== props.id)
         )
       );
 
@@ -248,30 +241,17 @@ function CookieItem(props) {
         { headers: { "Content-Type": "multipart/form-data" } }
       )
       .then(() => {
-        props.setAlertState(null); // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
+       dispatch(alertActions.clear()) // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
         setTimeout(() => {
-          props.setAlertState(
-            <Alert
-              text="Your changes have been successfully saved."
-              hue="120"
-              icon={faCheckCircle}
-            />
-          );
+          dispatch(alertActions.saveChangeSuccess())
         }, 100);
         setContentAnimation("");
         setEditAnimation("");
         setEditMode(false);
       })
       .catch((error) => {
-        props.setAlertState(null); // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
-        props.setAlertState(
-          <Alert
-            boldText="Oops,"
-            text=" something went wrong. Please try again later."
-            hue="0"
-            icon={faXmarkCircle}
-          />
-        );
+       dispatch(alertActions.clear()) // Clearing the "alert" state so the alert can pop up again, otherwise it stays there.
+       dispatch(alertActions.error())
         console.log(error);
       });
   }

@@ -11,6 +11,7 @@ import cookieLogo from "../../assets/svg/cookie.svg";
 import Topbar from "../Components/Topbar/Topbar";
 import CookieItem from "./CookieItem/CookieItem";
 import CookieGroup from "./CookieItem/CookieGroup";
+import Alert from "../Components/Alert/Alert";
 
 // Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -38,8 +39,6 @@ import { cookiesActions } from "../../store/slices/cookies";
 document.title = "My Cookies | Cookie Jar";
 
 function Cookies() {
-  // Alert management
-  const [alertState, setAlertState] = useState(null);
 
   // Search
   const [searchText, setSearchText] = useState("");
@@ -47,6 +46,8 @@ function Cookies() {
   // Redux configuration
   const cookies = useSelector((state) => state.cookies.cookies);
   const tags = useSelector((state) => state.cookies.tags);
+  const alert = useSelector((state)=> state.alert.alert);
+
   const dispatch = useDispatch();
 
   // #region On Component Mount
@@ -184,7 +185,14 @@ function Cookies() {
 
   return (
     <>
-      {alertState}
+      {alert.visible && <Alert
+        visible={alert.visible}
+        boldText={alert.boldText}
+        text={alert.text}
+        hue={alert.hue}
+        icon={alert.icon}
+      />}
+      
       <Topbar text="My Cookies" />
       {
         // #region Toolbar
@@ -334,7 +342,6 @@ function Cookies() {
                   tag={tag}
                   key={tag.name}
                   searchText={searchText}
-                  setAlertState={setAlertState}
                 />
               );
             } else {
@@ -357,7 +364,6 @@ function Cookies() {
                   date={c.date}
                   rank={c.rank}
                   tag={c.tag}
-                  setAlertState={setAlertState}
                 />
               );
             }

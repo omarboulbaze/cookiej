@@ -61,7 +61,6 @@ function CookieGroup(props) {
                   date={c.date}
                   rank={c.rank}
                   tag={c.tag}
-                  setAlertState={props.setAlertState}
                 />
               );
             }

@@ -5,7 +5,7 @@ import Alert from "../Components/Alert/Alert";
 
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendar, faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
+import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import {
   faAngleDown,
   faAngleUp,
@@ -22,6 +22,10 @@ import "./Add.css";
 
 // Cookie Background image
 import cookieBg from "../../assets/cookiebg.jpg";
+
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { alertActions } from "../../store/slices/alert";
 
 // #region Time ago
 const epochs = [
@@ -54,8 +58,12 @@ export const timeAgo = (date) => {
 };
 // #endregion
 
+document.title = "New Cookie | Cookie Jar";
+
 function Add() {
-  document.title = "New Cookie | Cookie Jar";
+  // Redux configuration
+  const alert = useSelector((state) => state.alert.alert);
+  const dispatch = useDispatch();
 
   const today = new Date().toLocaleDateString("en-CA");
 
@@ -163,14 +171,7 @@ function Add() {
         { headers: { "Content-Type": "multipart/form-data" } }
       )
       .then(() => {
-        setAlert(
-          <Alert
-            boldText="Congratulations!"
-            text=" Your cookie has been added to your cookie jar."
-            hue="120"
-            icon={faCheckCircle}
-          />
-        );
+        dispatch(alertActions.success())
         setImage(null);
         setImageUploaded(false);
         setTitle("");
@@ -182,18 +183,11 @@ function Add() {
         setTagPlusVisible(true);
       })
       .catch((error) => {
-        setAlert(
-          <Alert
-            boldText="Oops,"
-            text=" something went wrong. Please try again later."
-            hue="0"
-            icon={faXmarkCircle}
-          />
-        );
+        dispatch(alertActions.error())
         console.log(error);
       });
     // Setting Alert to null so the event can be triggered again, otherwise the "alert state" stays the same and the pop up happens only once.
-    setAlert(null);
+    dispatch(alertActions.clear())
   }
 
   // Image overlay
@@ -206,12 +200,15 @@ function Add() {
     }
   }
 
-  // Alert management
-  const [alert, setAlert] = useState(null);
-
   return (
     <>
-      {alert}
+      {alert.visible && <Alert
+        visible={alert.visible}
+        boldText={alert.boldText}
+        text={alert.text}
+        hue={alert.hue}
+        icon={alert.icon}
+      />}
       <Topbar text="New Cookie" />
       <form
         className="add_form"
