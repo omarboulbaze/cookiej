@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 // Initial state
-const counterInit = { counter: "" };
+const initialState = { counter: "" };
 
 // Slice function
-const counterSlice = createSlice({
+const stateSlice = createSlice({
   name: "counter",
-  initialState: counterInit,
+  initialState: initialState,
   reducers: {
     increment(state) {
       if (state.counter === -1) {
@@ -26,7 +26,7 @@ const counterSlice = createSlice({
 });
 
 // Export the actions that will be used to change the state in the components
-export const counterActions = counterSlice.actions;
+export const counterActions = stateSlice.actions;
 
 // Exporting the reducer that will be used in the store
-export default counterSlice.reducer;
+export default stateSlice.reducer;

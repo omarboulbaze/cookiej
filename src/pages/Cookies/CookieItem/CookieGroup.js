@@ -13,6 +13,7 @@ import {
 // CookieGroup Component
 
 function CookieGroup(props) {
+
     const [collapsed, setCollapsed] = useState(true);
 
     function collpaseGroup() {
@@ -61,10 +62,6 @@ function CookieGroup(props) {
                   rank={c.rank}
                   tag={c.tag}
                   setAlertState={props.setAlertState}
-                  cookiesData={props.cookiesData}
-                  setCookiesData={props.setCookiesData}
-                  arrayTags={props.arrayTags}
-                  setTags={props.setTags}
                   groupCookiesByTag={props.groupCookiesByTag}
 
                 />

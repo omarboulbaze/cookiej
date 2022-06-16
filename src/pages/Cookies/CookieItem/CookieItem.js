@@ -27,7 +27,16 @@ import { apiUrl } from "../../../Root";
 //  Importing axios
 import axios from "axios";
 
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { cookiesActions } from "../../../store/slices/cookies";
+
 function CookieItem(props) {
+  // Redux configuration
+  const cookies = useSelector((state) => state.cookies.cookies);
+  const tags = useSelector((state) => state.cookies.tags);
+  const dispatch = useDispatch();
+
   // #region Edit mode states
   const [image, setImage] = useState(props.image);
   const [title, setTitle] = useState(props.title);
@@ -68,7 +77,7 @@ function CookieItem(props) {
     default:
       break;
   }
-  
+
   const primaryColor = `hsl(${hue}, ${saturation}, ${lightness})`;
   const backgroundColor = `hsl(${hue}, ${saturationBg}, ${lightnessBg})`;
   const dateColorEditMode = `hsl(${hue}, ${saturation}, 85%)`;
@@ -106,24 +115,28 @@ function CookieItem(props) {
           />
         );
       }, 100);
-      props.setCookiesData(
-        props.cookiesData.filter((cookies) => cookies._id !== props.id)
+      dispatch(
+        cookiesActions.setCookies(
+          props.cookiesData.filter((cookies) => cookies._id !== props.id)
+        )
       );
 
-      if (props.arrayTags) {
-        props.setTags(
-          props.arrayTags.map((tag) => {
-            if (tag.name === props.tag) {
-              return {
-                name: tag.name,
-                content: tag.content.filter(
-                  (cookie) => cookie._id !== props.id
-                ),
-              };
-            } else {
-              return tag;
-            }
-          })
+      if (tags) {
+        dispatch(
+          cookiesActions.setTags(
+            tags.map((tag) => {
+              if (tag.name === props.tag) {
+                return {
+                  name: tag.name,
+                  content: tag.content.filter(
+                    (cookie) => cookie._id !== props.id
+                  ),
+                };
+              } else {
+                return tag;
+              }
+            })
+          )
         );
       }
     }
@@ -198,10 +211,9 @@ function CookieItem(props) {
   }
 
   function saveEditChanges() {
-    // Updating cookiesData from child component using the setCookiesData method in order to update the DOM (Document Object Model)
 
-    props.setCookiesData(
-      props.cookiesData.map((cookie) => {
+    dispatch(cookiesActions.setCookies(
+      cookies.map((cookie) => {
         if (cookie._id === props.id) {
           return {
             _id: props.id,
@@ -216,7 +228,9 @@ function CookieItem(props) {
           return cookie;
         }
       })
-    );
+    ))
+      
+    
 
     // Sending a PUT request to the API
 

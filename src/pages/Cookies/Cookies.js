@@ -28,36 +28,48 @@ import {
 // API's url from Root
 import { apiUrl } from "../../Root";
 
-//  Importing axios
+//  Axios
 import axios from "axios";
 
-function Cookies() {
-  document.title = "My Cookies | Cookie Jar";
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { cookiesActions } from "../../store/slices/cookies";
 
+document.title = "My Cookies | Cookie Jar";
+
+function Cookies() {
   // Alert management
   const [alertState, setAlertState] = useState(null);
+
   // Search
   const [searchText, setSearchText] = useState("");
 
+  // Redux configuration
+  const cookies = useSelector((state) => state.cookies.cookies);
+  const tags = useSelector((state) => state.cookies.tags);
+  const dispatch = useDispatch();
+
   // #region On Component Mount
-
-  // Retrieving the cookies from the database
-  const [cookiesData, setCookiesData] = useState([]);
-
   function sortByDefault() {
     setSortBy("");
     axios
       .get(apiUrl + "/")
       .then((res) => {
-        if (res.data.length > 0) setCookiesData(res.data);
+        if (res.data.length > 0) dispatch(cookiesActions.setCookies(res.data));
       })
       .catch((e) => console.log("GET request", e));
   }
 
   // Once the component is mounted call sortByDefalut
   useEffect(() => {
-    sortByDefault();
-  }, []);
+    setSortBy("");
+    axios
+      .get(apiUrl + "/")
+      .then((res) => {
+        if (res.data.length > 0) dispatch(cookiesActions.setCookies(res.data));
+      })
+      .catch((e) => console.log("GET request", e));
+  }, [dispatch]);
 
   // #endregion On Component Mount
 
@@ -69,13 +81,13 @@ function Cookies() {
   // Sorting cookies by Date (Newest to Oldest)
   function sortByDate() {
     setSortBy("date");
-    let sortedArray = cookiesData;
+    let sortedArray = cookies.map(c=>c);
     sortedArray.sort((a, b) => {
       if (a.date < b.date) return 1;
       if (a.date > b.date) return -1;
       return 0;
     });
-    setCookiesData(sortedArray);
+    dispatch(cookiesActions.setCookies(sortedArray));
   }
 
   // Sorting cookies by Rank (Higher rank to Lower rank)
@@ -89,19 +101,19 @@ function Cookies() {
   // Main function
   function sortByRank() {
     setSortBy("rank");
-    let sortedArray = cookiesData;
+    let sortedArray = cookies.map(c=>c);
     sortedArray.sort((a, b) => {
       if (rankToNumber(a) < rankToNumber(b)) return 1;
       if (rankToNumber(a) > rankToNumber(b)) return -1;
       return 0;
     });
-    setCookiesData(sortedArray);
+    dispatch(cookiesActions.setCookies(sortedArray));
   }
 
   // Sorting cookies by alphabetical order
   function sortByAz() {
     setSortBy("az");
-    let sortedArray = cookiesData;
+    let sortedArray = cookies.map(c=>c);
     sortedArray.sort((a, b) => {
       if (a.title.toLowerCase() < b.title.toLowerCase()) {
         return -1;
@@ -111,7 +123,7 @@ function Cookies() {
       }
       return 0;
     });
-    setCookiesData(sortedArray);
+    dispatch(cookiesActions.setCookies(sortedArray));
   }
 
   // #endregion Cookie sorting
@@ -123,7 +135,7 @@ function Cookies() {
 
   function groupByDefault() {
     setGroupBy("");
-    setTagsArray([]);
+    dispatch(cookiesActions.setTags([]));
   }
 
   function groupByDate() {
@@ -136,18 +148,15 @@ function Cookies() {
 
   // #region Group by tag
 
-  // Array that contains the cookies grouped by tag
-  const [tagsArray, setTagsArray] = useState([]);
-
   // Clearing tagsArray state when groupBy is not equal to "tag" anymore
   useEffect(() => {
-    if (groupBy !== "tag") setTagsArray([]);
-  }, [groupBy]);
+    if (groupBy !== "tag") dispatch(cookiesActions.setTags([]));
+  }, [groupBy, dispatch]);
 
   // Function that take all the cookies and group them by tag
   function groupCookiesByTag() {
-    let temporaryTagArray = tagsArray;
-    cookiesData.forEach((cookie) => {
+    let temporaryTagArray = tags.map((c) => c);
+    cookies.forEach((cookie) => {
       if (
         !temporaryTagArray.some((arrayTag) => {
           return arrayTag.name === cookie.tag;
@@ -160,7 +169,7 @@ function Cookies() {
         });
       }
     });
-    setTagsArray(temporaryTagArray);
+    dispatch(cookiesActions.setTags(temporaryTagArray));
   }
 
   // Function triggered when the user clicks on the "Group By Tag" button
@@ -171,13 +180,15 @@ function Cookies() {
 
   // #endregion Group by tag
 
+  // #endregion Cookie grouping
+
   return (
     <>
       {alertState}
       <Topbar text="My Cookies" />
       {
         // #region Toolbar
-        cookiesData.length > 0 ? (
+        cookies.length > 0 ? (
           <div className="toolbar-container">
             {!sortMode && !groupMode ? (
               <div className="toolbar">
@@ -186,9 +197,9 @@ function Cookies() {
                   <input
                     type="text"
                     placeholder={
-                      cookiesData.length === 1
+                      cookies.length === 1
                         ? `Search...`
-                        : `Search ${cookiesData.length} cookies...`
+                        : `Search ${cookies.length} cookies...`
                     }
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
@@ -316,18 +327,14 @@ function Cookies() {
 
       <div className="cookie-grouper">
         {groupBy === "tag" ? (
-          tagsArray.map((tag) => {
+          tags.map((tag) => {
             if (tag.content.length > 0) {
               return (
                 <CookieGroup
                   tag={tag}
                   key={tag.name}
                   searchText={searchText}
-                  cookiesData={cookiesData}
-                  setCookiesData={setCookiesData}
                   setAlertState={setAlertState}
-                  arrayTags={tagsArray}
-                  setTagsArray={setTagsArray}
                   groupCookiesByTag={groupCookiesByTag}
                 />
               );
@@ -335,8 +342,8 @@ function Cookies() {
               return null;
             }
           })
-        ) : cookiesData.length > 0 ? (
-          cookiesData.map((c) => {
+        ) : cookies.length > 0 ? (
+          cookies.map((c) => {
             if (
               c.title.toLowerCase().includes(searchText.toLowerCase()) ||
               c.description.toLowerCase().includes(searchText.toLowerCase())
@@ -351,8 +358,6 @@ function Cookies() {
                   date={c.date}
                   rank={c.rank}
                   tag={c.tag}
-                  cookiesData={cookiesData}
-                  setCookiesData={setCookiesData}
                   setAlertState={setAlertState}
                 />
               );
