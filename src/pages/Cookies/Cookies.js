@@ -335,7 +335,6 @@ function Cookies() {
                   key={tag.name}
                   searchText={searchText}
                   setAlertState={setAlertState}
-                  groupCookiesByTag={groupCookiesByTag}
                 />
               );
             } else {
