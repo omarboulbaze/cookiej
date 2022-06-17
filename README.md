@@ -4,7 +4,7 @@
 
 ## Project Board
 ### Open the Scrum Board of this project by clicking below
-[![agileicon](https://user-images.githubusercontent.com/25458706/167161157-13718b34-f371-4bdd-89c5-8eb0aeaf1b32.png)](https://github.com/users/omarboulbaze/projects/3)
+<a href="https://github.com/users/omarboulbaze/projects/3" target="_blank"><img src="https://user-images.githubusercontent.com/25458706/167161157-13718b34-f371-4bdd-89c5-8eb0aeaf1b32.png"/></a>
 
 ## Screenshots
 ![cookie5](https://user-images.githubusercontent.com/25458706/170862673-e5172dff-2b6d-44c5-b04e-570648ed88eb.jpg)
