@@ -45,10 +45,14 @@ jobs:
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
       with:
-        source: "./build"
+        source: "./build/"
         target: "/var/www/cookie"
 
     - name: Executing remote command
       uses: appleboy/ssh-action@master
       with:
-        script: ls
+        host: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: 22
+        KEY: ${{ secrets.SSHKEY }}
+        script: whoami
