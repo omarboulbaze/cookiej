@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from './Root';
 
-// Redux test
+// Redux
 import { Provider } from 'react-redux';
 import store from './store/store';
 
