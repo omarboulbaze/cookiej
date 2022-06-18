@@ -25,9 +25,10 @@ jobs:
 
     - name: Executing remote command
       uses: appleboy/ssh-action@master
-      with:
+      env:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
+      with:
         script: whoami
