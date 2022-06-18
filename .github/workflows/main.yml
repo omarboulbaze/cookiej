@@ -19,7 +19,7 @@ jobs:
         server: ${{ secrets.SERVER }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        protocol: ${{ secrets.PROTOCOL }}
+        protocol: ftps
         port: ${{ secrets.PORT }}
         local-dir: ./build/
         server-dir: /var/www/
