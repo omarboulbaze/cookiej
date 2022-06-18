@@ -20,5 +20,5 @@ jobs:
         KEY: ${{ secrets.SSHKEY }}
         PORT: ${{ secrets.PORT }}
       with:
-        source: "./build/*"
+        source: "build/*"
         target: "/var/www/cookie"
