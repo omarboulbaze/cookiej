@@ -21,6 +21,7 @@
 #         local-dir: ./build/
 #         server-dir: /var/www/cookie/
 #         log-level: verbose
+# test
 
 name: 🚀 Deploy website on push
 
