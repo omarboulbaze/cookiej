@@ -1,0 +1,15 @@
+{
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "orientation": "portrait",
+    "scope": "/",
+    "start_url": "/",
+    "name": "CookieJ",
+    "short_name": "CookieJ",
+    "description": "Keep track of all your accomplishments, whether it's physical or mental. Come back to it and use it as fuel when times become though.",
+    "icons": [
+          {
+          }
+        ]
+}
