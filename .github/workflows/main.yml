@@ -19,8 +19,8 @@ jobs:
         server: ${{ secrets.SERVER }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        protocol: sftp
-        port: ${{ secrets.PORT }}
+        protocol: ftps
+        port: 22
         local-dir: ./build/
         server-dir: /var/www/
         log-level: verbose
