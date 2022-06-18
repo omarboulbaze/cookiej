@@ -17,18 +17,17 @@ jobs:
       env:
         HOST: ${{ secrets.SERVER }}
         USERNAME: ${{ secrets.USERNAME }}
-        PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
+        PORT: ${{ secrets.PORT }}
       with:
         source: "./build/"
         target: "/var/www/cookie"
 
     - name: Executing remote command
-      uses: appleboy/ssh-action@master
-      env:
+      uses: appleboy/ssh-action@v0.1.4
+      with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
-      with:
         script: whoami
