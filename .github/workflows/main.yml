@@ -20,14 +20,5 @@ jobs:
         KEY: ${{ secrets.SSHKEY }}
         PORT: ${{ secrets.PORT }}
       with:
-        source: "./build/"
+        source: "./build/*"
         target: "/var/www/cookie"
-
-    - name: Executing remote command
-      uses: appleboy/ssh-action@v0.1.4
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSHKEY }}
-        port: ${{ secrets.PORT }}
-        script: whoami
