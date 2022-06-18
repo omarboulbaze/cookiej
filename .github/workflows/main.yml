@@ -19,8 +19,8 @@ jobs:
         server: ${{ secrets.SERVER }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        protocol: ${{ secrets.PROTOCOL }}
+        protocol: ftps-legacy
         port: ${{ secrets.PORT }}
         local-dir: ./build/
-        server-dir: /var/www/
+        server-dir: /var/www/cookie/
         log-level: verbose
