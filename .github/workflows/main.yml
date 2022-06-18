@@ -34,7 +34,7 @@ jobs:
 
     steps:
     - name: 🚚 Get latest code
-    - uses: actions/checkout@v3
+      uses: actions/checkout@v3
 
     - name: 📂 Copy repository contents via scp
       uses: appleboy/scp-action@master
