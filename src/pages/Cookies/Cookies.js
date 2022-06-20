@@ -39,14 +39,13 @@ import { cookiesActions } from "../../store/slices/cookies";
 document.title = "My Cookies | Cookie Jar";
 
 function Cookies() {
-
   // Search
   const [searchText, setSearchText] = useState("");
 
   // Redux configuration
   const cookies = useSelector((state) => state.cookies.cookies);
   const tags = useSelector((state) => state.cookies.tags);
-  const alert = useSelector((state)=> state.alert.alert);
+  const alert = useSelector((state) => state.alert.alert);
 
   const dispatch = useDispatch();
 
@@ -82,7 +81,7 @@ function Cookies() {
   // Sorting cookies by Date (Newest to Oldest)
   function sortByDate() {
     setSortBy("date");
-    let sortedArray = cookies.map(c=>c);
+    let sortedArray = cookies.map((c) => c);
     sortedArray.sort((a, b) => {
       if (a.date < b.date) return 1;
       if (a.date > b.date) return -1;
@@ -102,7 +101,7 @@ function Cookies() {
   // Main function
   function sortByRank() {
     setSortBy("rank");
-    let sortedArray = cookies.map(c=>c);
+    let sortedArray = cookies.map((c) => c);
     sortedArray.sort((a, b) => {
       if (rankToNumber(a) < rankToNumber(b)) return 1;
       if (rankToNumber(a) > rankToNumber(b)) return -1;
@@ -114,7 +113,7 @@ function Cookies() {
   // Sorting cookies by alphabetical order
   function sortByAz() {
     setSortBy("az");
-    let sortedArray = cookies.map(c=>c);
+    let sortedArray = cookies.map((c) => c);
     sortedArray.sort((a, b) => {
       if (a.title.toLowerCase() < b.title.toLowerCase()) {
         return -1;
@@ -154,8 +153,10 @@ function Cookies() {
     if (groupBy !== "tag") dispatch(cookiesActions.setTags([]));
   }, [groupBy, dispatch]);
 
-  // Function that take all the cookies and group them by tag
-  function groupCookiesByTag() {
+  // Function triggered when the user clicks on the "Group By Tag" button
+  function groupByTag() {
+    setGroupBy("tag");
+
     let temporaryTagArray = tags.map((c) => c);
     cookies.forEach((cookie) => {
       if (
@@ -173,26 +174,22 @@ function Cookies() {
     dispatch(cookiesActions.setTags(temporaryTagArray));
   }
 
-  // Function triggered when the user clicks on the "Group By Tag" button
-  function groupByTag() {
-    setGroupBy("tag");
-    groupCookiesByTag();
-  }
-
   // #endregion Group by tag
 
   // #endregion Cookie grouping
 
   return (
     <>
-      {alert.visible && <Alert
-        visible={alert.visible}
-        boldText={alert.boldText}
-        text={alert.text}
-        hue={alert.hue}
-        icon={alert.icon}
-      />}
-      
+      {alert.visible && (
+        <Alert
+          visible={alert.visible}
+          boldText={alert.boldText}
+          text={alert.text}
+          hue={alert.hue}
+          icon={alert.icon}
+        />
+      )}
+
       <Topbar text="My Cookies" />
       {
         // #region Toolbar
@@ -338,11 +335,7 @@ function Cookies() {
           tags.map((tag) => {
             if (tag.content.length > 0) {
               return (
-                <CookieGroup
-                  tag={tag}
-                  key={tag.name}
-                  searchText={searchText}
-                />
+                <CookieGroup tag={tag} key={tag.name} searchText={searchText} />
               );
             } else {
               return null;
