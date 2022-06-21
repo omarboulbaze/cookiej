@@ -33,7 +33,7 @@ import { alertActions } from "../../../store/slices/alert";
 function CookieItem(props) {
   // Redux configuration
   const cookies = useSelector((state) => state.cookies.cookies);
-  const tags = useSelector((state) => state.cookies.tags);
+  const groups = useSelector((state) => state.cookies.groups);
   const dispatch = useDispatch();
 
   // #region Edit mode states
@@ -114,10 +114,10 @@ function CookieItem(props) {
         )
       );
 
-      if (tags) {
+      if (groups) {
         dispatch(
-          cookiesActions.setTags(
-            tags.map((tag) => {
+          cookiesActions.setGroups(
+            groups.map((tag) => {
               if (tag.name === props.tag) {
                 return {
                   name: tag.name,

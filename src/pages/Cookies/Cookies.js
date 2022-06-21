@@ -44,7 +44,7 @@ function Cookies() {
 
   // Redux configuration
   const cookies = useSelector((state) => state.cookies.cookies);
-  const tags = useSelector((state) => state.cookies.tags);
+  const groups = useSelector((state) => state.cookies.groups);
   const alert = useSelector((state) => state.alert.alert);
 
   const dispatch = useDispatch();
@@ -135,7 +135,7 @@ function Cookies() {
 
   function groupByDefault() {
     setGroupBy("");
-    dispatch(cookiesActions.setTags([]));
+    dispatch(cookiesActions.clearGroups());
   }
 
   function groupByDate() {
@@ -144,20 +144,16 @@ function Cookies() {
 
   function groupByRank() {
     setGroupBy("rank");
+
+   
   }
 
   // #region Group by tag
 
-  // Clearing tagsArray state when groupBy is not equal to "tag" anymore
-  useEffect(() => {
-    if (groupBy !== "tag") dispatch(cookiesActions.setTags([]));
-  }, [groupBy, dispatch]);
-
-  // Function triggered when the user clicks on the "Group By Tag" button
   function groupByTag() {
     setGroupBy("tag");
 
-    let temporaryTagArray = tags.map((c) => c);
+    let temporaryTagArray = [];
     cookies.forEach((cookie) => {
       if (
         !temporaryTagArray.some((arrayTag) => {
@@ -167,11 +163,11 @@ function Cookies() {
         temporaryTagArray.push({ name: cookie.tag, content: [cookie] });
       } else {
         temporaryTagArray.forEach((arrayTag) => {
-          if (arrayTag.name === cookie.tag) arrayTag.content.push(cookie);
+          if (arrayTag.name === cookie.tag) return arrayTag.content.push(cookie);
         });
       }
     });
-    dispatch(cookiesActions.setTags(temporaryTagArray));
+    dispatch(cookiesActions.setGroups(temporaryTagArray));
   }
 
   // #endregion Group by tag
@@ -332,7 +328,7 @@ function Cookies() {
 
       <div className="cookie-grouper">
         {groupBy === "tag" ? (
-          tags.map((tag) => {
+          groups.map((tag) => {
             if (tag.content.length > 0) {
               return (
                 <CookieGroup tag={tag} key={tag.name} searchText={searchText} />

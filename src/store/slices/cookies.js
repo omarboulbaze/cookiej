@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 // Initial state
-const initialState = { cookies: [], tags: [] };
+const initialState = { cookies: [], groups: [] };
 
 // Slice function
 const stateSlice = createSlice({
@@ -11,11 +11,13 @@ const stateSlice = createSlice({
     setCookies(state, action) {
       state.cookies = action.payload;
     },
-    setTags(state, action) {
-      state.tags = action.payload;
+    setGroups(state, action) {
+      state.groups = action.payload;
+    },
+    clearGroups(state) {
+      state.groups = [];
     },
   },
-  
 });
 
 // Export the actions that will be used to change the state in the components
