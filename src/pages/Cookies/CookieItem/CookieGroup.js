@@ -36,7 +36,7 @@ function CookieGroup(props) {
             <span className="cookie-group-title">
             <span className="cookie-group-length">{props.tag.content.length}</span>
               {props.tag.name ? (
-                props.tag.name
+                props.tag.name.replace(/./, c => c.toUpperCase())
               ) : (
                 <FontAwesomeIcon icon={faTags} />
               )}

@@ -145,7 +145,21 @@ function Cookies() {
   function groupByRank() {
     setGroupBy("rank");
 
-   
+    let temporaryArray = [];
+    cookies.forEach((cookie) => {
+      if (
+        !temporaryArray.some((array) => {
+          return array.name === cookie.rank;
+        })
+      ) {
+        temporaryArray.push({ name: cookie.rank, content: [cookie] });
+      } else {
+        temporaryArray.forEach((array) => {
+          if (array.name === cookie.rank) return array.content.push(cookie);
+        });
+      }
+    });
+    dispatch(cookiesActions.setGroups(temporaryArray));
   }
 
   // #region Group by tag
@@ -153,21 +167,21 @@ function Cookies() {
   function groupByTag() {
     setGroupBy("tag");
 
-    let temporaryTagArray = [];
+    let temporaryArray = [];
     cookies.forEach((cookie) => {
       if (
-        !temporaryTagArray.some((arrayTag) => {
-          return arrayTag.name === cookie.tag;
+        !temporaryArray.some((array) => {
+          return array.name.toLowerCase() === cookie.tag.toLowerCase();
         })
       ) {
-        temporaryTagArray.push({ name: cookie.tag, content: [cookie] });
+        temporaryArray.push({ name: cookie.tag, content: [cookie] });
       } else {
-        temporaryTagArray.forEach((arrayTag) => {
-          if (arrayTag.name === cookie.tag) return arrayTag.content.push(cookie);
+        temporaryArray.forEach((array) => {
+          if (array.name.toLowerCase() === cookie.tag.toLowerCase()) return array.content.push(cookie);
         });
       }
     });
-    dispatch(cookiesActions.setGroups(temporaryTagArray));
+    dispatch(cookiesActions.setGroups(temporaryArray));
   }
 
   // #endregion Group by tag
@@ -328,6 +342,16 @@ function Cookies() {
 
       <div className="cookie-grouper">
         {groupBy === "tag" ? (
+          groups.map((tag) => {
+            if (tag.content.length > 0) {
+              return (
+                <CookieGroup tag={tag} key={tag.name} searchText={searchText} />
+              );
+            } else {
+              return null;
+            }
+          })
+        ) : groupBy === "rank" ? (
           groups.map((tag) => {
             if (tag.content.length > 0) {
               return (
