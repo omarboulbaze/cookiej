@@ -345,7 +345,7 @@ function Cookies() {
           groups.map((group) => {
             if (group.content.length > 0) {
               return (
-                <CookieGroup group={group} key={group.name} searchText={searchText} />
+                <CookieGroup group={group} key={group.name} searchText={searchText} groupBy={groupBy}/>
               );
             } else {
               return null;
@@ -355,7 +355,7 @@ function Cookies() {
           groups.map((group) => {
             if (group.content.length > 0) {
               return (
-                <CookieGroup group={group} key={group.name} searchText={searchText} />
+                <CookieGroup group={group} key={group.name} searchText={searchText} groupBy={groupBy} />
               );
             } else {
               return null;
