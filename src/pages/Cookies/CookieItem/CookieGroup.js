@@ -10,7 +10,6 @@ import {
   faTags,
 } from "@fortawesome/free-solid-svg-icons";
 
-// CookieGroup Component
 
 function CookieGroup(props) {
 
@@ -23,8 +22,9 @@ function CookieGroup(props) {
         setCollapsed(true);
       }
     }
-  // #endregion Cookie grouping
 
+
+  if(true){
     return (
       <>
         <div
@@ -34,9 +34,9 @@ function CookieGroup(props) {
         >
           <div className="cookie-group-head" onClick={() => collpaseGroup()}>
             <span className="cookie-group-title">
-            <span className="cookie-group-length">{props.tag.content.length}</span>
-              {props.tag.name ? (
-                props.tag.name.replace(/./, c => c.toUpperCase())
+            <span className="cookie-group-length">{props.group.content.length}</span>
+              {props.group.name ? (
+                props.group.name.replace(/./, c => c.toUpperCase())
               ) : (
                 <FontAwesomeIcon icon={faTags} />
               )}
@@ -46,7 +46,7 @@ function CookieGroup(props) {
               className="icon"
             />
           </div>
-          {props.tag.content.map((c) => {
+          {props.group.content.map((c) => {
             if (
               c.title.toLowerCase().includes(props.searchText.toLowerCase()) ||
               c.description.toLowerCase().includes(props.searchText.toLowerCase())
@@ -69,6 +69,9 @@ function CookieGroup(props) {
         </div>
       </>
     );
-  }
+  }else{
+    return(<h1>broski</h1>)
+  }}
+    
 
   export default CookieGroup;

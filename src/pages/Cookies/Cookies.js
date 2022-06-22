@@ -342,20 +342,20 @@ function Cookies() {
 
       <div className="cookie-grouper">
         {groupBy === "tag" ? (
-          groups.map((tag) => {
-            if (tag.content.length > 0) {
+          groups.map((group) => {
+            if (group.content.length > 0) {
               return (
-                <CookieGroup tag={tag} key={tag.name} searchText={searchText} />
+                <CookieGroup group={group} key={group.name} searchText={searchText} />
               );
             } else {
               return null;
             }
           })
         ) : groupBy === "rank" ? (
-          groups.map((tag) => {
-            if (tag.content.length > 0) {
+          groups.map((group) => {
+            if (group.content.length > 0) {
               return (
-                <CookieGroup tag={tag} key={tag.name} searchText={searchText} />
+                <CookieGroup group={group} key={group.name} searchText={searchText} />
               );
             } else {
               return null;
