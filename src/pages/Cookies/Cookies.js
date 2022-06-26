@@ -145,8 +145,18 @@ function Cookies() {
   function groupByRank() {
     setGroupBy("rank");
 
+    // Cookies will always be sorted by higher rank (Diamond to Bronze) when grouped by Rank
+
+    let sortedArray = cookies.map((c) => c);
+    sortedArray.sort((a, b) => {
+      if (rankToNumber(a) < rankToNumber(b)) return 1;
+      if (rankToNumber(a) > rankToNumber(b)) return -1;
+      return 0;
+    });
+
     let temporaryArray = [];
-    cookies.forEach((cookie) => {
+
+    sortedArray.forEach((cookie) => {
       if (
         !temporaryArray.some((array) => {
           return array.name === cookie.rank;
